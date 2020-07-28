@@ -57,3 +57,43 @@ export const deleteDistribute = (id) => {
   let url = `${env.api_endpoint}/api/distributor/${id}`;
   return axios.delete(url, config);
 };
+export const getProduct = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+    params: payload,
+  };
+  let url = `${env.api_endpoint}/api/product`;
+  return axios.get(url, config);
+};
+
+export const postProduct = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/product`;
+  return axios.post(url, payload, config);
+};
+
+export const updateProduct = (payload, id) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/product/${id}`;
+  return axios.put(url, payload, config);
+};
+
+export const deleteProduct = (id) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/product/${id}`;
+  return axios.delete(url, config);
+};

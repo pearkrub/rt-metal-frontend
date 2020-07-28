@@ -39,6 +39,14 @@ const routes = [
       middleware: [isAuth],
     },
   },
+  {
+    path: "/product-list",
+    name: "product-list",
+    component: views.ProductList,
+    meta: {
+      middleware: [isAuth],
+    },
+  },
 ];
 
 const router = new VueRouter({

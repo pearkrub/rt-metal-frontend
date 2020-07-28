@@ -28,8 +28,8 @@
           </li>
           <li
             class="nav-item"
-            :class="{active: page == 'distributer'}"
-            @click="page = 'distributer'"
+            :class="{active: page == 'product-list'}"
+            @click="linkTo('product-list')"
           >
             <a class="nav-link">รายการสินค้า</a>
           </li>
@@ -57,14 +57,14 @@ export default {
   name: "NavBarItem",
   data() {
     return {
-      page: ""
+      page: "",
     };
   },
   computed: {
     ...mapState(["userProfile"]),
     userName() {
       return get(this.userProfile, "username", "");
-    }
+    },
   },
   methods: {
     clearSession() {
@@ -76,8 +76,8 @@ export default {
     linkTo(name) {
       this.page = name;
       this.$router.push({ name: name });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

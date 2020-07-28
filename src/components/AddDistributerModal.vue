@@ -157,6 +157,7 @@
               class="btn btn-secondary"
               ref="closeModalBtn"
               data-dismiss="modal"
+              @click="onCloseModal"
             >ยกเลิก</button>
             <button type="button" class="btn btn-primary" @click="submit">บันทึก</button>
           </div>

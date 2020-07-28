@@ -4,13 +4,13 @@
       <thead>
         <tr>
           <th>ลำดับที่</th>
-          <th>รหัสผู้จัดจำหน่าย</th>
-          <th>ชื่อผู้จัดจำหน่าย</th>
+          <th>รหัสสินค้า</th>
+          <th>ชื่อสินค้า</th>
           <th>
             <button
               class="btn btn-success btn-sm"
               data-toggle="modal"
-              data-target=".add-distributer-modal"
+              data-target=".add-product-modal"
               @click="openModalCreate = true"
               data-backdrop="static"
               data-keyboard="false"
@@ -19,85 +19,88 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(distributer, index) in distributers" :key="index">
+        <tr v-for="(product, index) in products" :key="index">
           <td class="text-center">{{ index + 1 }}</td>
           <td>
-            <div class="data-list">{{ distributer.distributorTaxId }}</div>
+            <div class="data-list text-center">P000{{ product.id }}</div>
           </td>
           <td>
-            <div class="data-list">{{ distributer.distributorName }}</div>
+            <div class="data-list">{{ product.productName }}</div>
           </td>
           <td class="text-center">
             <button
               class="btn btn-sm"
               data-toggle="modal"
-              data-target=".edit-distributer-modal"
+              data-target=".edit-product-modal"
               data-backdrop="static"
               data-keyboard="false"
-              @click="editDistributor(distributer)"
+              @click="editProduct(product)"
             >แก้ไข</button>&nbsp;
-            <button class="btn btn-danger btn-sm" @click="deleteDistributor(distributer)">ลบ</button>
+            <button
+              class="btn btn-danger btn-sm"
+              @click="confirmDeleteProduct(distributer)"
+            >ลบ</button>
           </td>
         </tr>
       </tbody>
     </table>
-    <AddDistributerModal
+    <AddProductModal
       v-if="openModalCreate"
       :callback-create="callbackCreate"
       :on-close-modal="closeModal"
     />
-    <EditDistributerModal
+    <EditProductModal
       v-if="openModalEdit"
       :callback-create="callbackEdit"
-      :distributor-data="distributer"
+      :product-data="product"
       :on-close-modal="closeModal"
     />
   </div>
 </template>
 <script>
-import { getDistribute, deleteDistribute } from "../api";
-import AddDistributerModal from "../components/AddDistributerModal";
-import EditDistributerModal from "../components/EditDistributerModal";
+import { getProduct, deleteProduct } from "../api";
+import AddProductModal from "../components/AddProductModal";
+import EditProductModal from "../components/EditProductModal";
 import Swal from "sweetalert2";
 
 export default {
-  name: "DistributerList",
+  name: "ProductList",
   components: {
-    AddDistributerModal,
-    EditDistributerModal,
+    AddProductModal,
+    EditProductModal,
   },
   data() {
     return {
-      distributers: [],
-      distributer: null,
+      products: [],
+      product: null,
       openModalCreate: false,
       openModalEdit: false,
     };
   },
   methods: {
-    async getDistributer() {
+    async doGetProduct() {
       try {
-        const response = await getDistribute({});
+        const response = await getProduct({});
         console.log(response.data);
-        this.distributers = response.data;
+        this.products = response.data;
       } catch (error) {
         console.log(error);
       }
     },
-    callbackCreate(distributer) {
+    callbackCreate(product) {
+      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
+      this.products = [...this.products, product];
+      this.closeModal();
+    },
+    callbackEdit(product) {
+      console.log(product);
       Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
       this.closeModal();
-      this.distributers = [...this.distributers, distributer];
+      this.doGetProduct();
     },
-    callbackEdit(distributer) {
-      console.log(distributer);
-      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
-      this.closeModal();
-      this.getDistributer();
-    },
-    editDistributor(data) {
+    editProduct(data) {
       this.openModalEdit = true;
-      this.distributer = data;
+      this.product = data;
     },
     closeModal() {
       setTimeout(() => {
@@ -105,11 +108,11 @@ export default {
         this.openModalCreate = false;
       }, 500);
     },
-    deleteDistributor(distributer) {
-      console.log(distributer);
+    confirmDeleteProduct(product) {
+      console.log(product);
       Swal.fire({
         title: `ยืนยัน`,
-        text: `ลบ ${distributer.distributorName}`,
+        text: `ลบ ${product.productName}`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#dc3545",
@@ -118,21 +121,18 @@ export default {
       }).then(async (result) => {
         if (result.value) {
           try {
-            await deleteDistribute(distributer.id);
+            await deleteProduct(product.id);
             Swal.fire("สำเร็จ!", "ลบข้อมูลเรียบร้อยแล้ว", "success");
-            this.getDistributer();
+            this.doGetProduct();
           } catch (error) {
             Swal.fire("ผิดพลาด!", "ลบข้อมูลไม่สำเร็จ", "error");
           }
-
-          // For more information about handling dismissals please visit
-          // https://sweetalert2.github.io/#handling-dismissals
         }
       });
     },
   },
   mounted() {
-    this.getDistributer();
+    this.doGetProduct();
   },
 };
 </script>
