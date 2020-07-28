@@ -13,7 +13,11 @@
           <li class="nav-item" :class="{active: page == 'home'}" @click="page = 'home'" to="/home">
             <a class="nav-link">Home</a>
           </li>
-          <li class="nav-item" :class="{active: page == 'buy'}" @click="page = 'buy'">
+          <li
+            class="nav-item"
+            :class="{active: page == 'purchase-list'}"
+            @click="linkTo('purchase-list')"
+          >
             <a class="nav-link">ซื้อ</a>
           </li>
           <li class="nav-item" :class="{active: page == 'sell'}" @click="page = 'sell'">

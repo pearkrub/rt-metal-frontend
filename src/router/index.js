@@ -47,6 +47,22 @@ const routes = [
       middleware: [isAuth],
     },
   },
+  {
+    path: "/purchase-list",
+    name: "purchase-list",
+    component: views.PurchaseList,
+    meta: {
+      middleware: [isAuth],
+    },
+  },
+  {
+    path: "/create-purchase",
+    name: "create-purchase",
+    component: views.CreatePurchase,
+    meta: {
+      middleware: [isAuth],
+    },
+  },
 ];
 
 const router = new VueRouter({

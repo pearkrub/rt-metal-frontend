@@ -97,3 +97,14 @@ export const deleteProduct = (id) => {
   let url = `${env.api_endpoint}/api/product/${id}`;
   return axios.delete(url, config);
 };
+
+export const getPurchase = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+    params: payload,
+  };
+  let url = `${env.api_endpoint}/api/purchase`;
+  return axios.get(url, config);
+};

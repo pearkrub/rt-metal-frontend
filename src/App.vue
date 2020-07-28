@@ -14,14 +14,14 @@ import { mapState } from "vuex";
 export default {
   name: "App",
   components: {
-    NavBarItem
+    NavBarItem,
   },
   computed: {
-    ...mapState(["accessToken"])
+    ...mapState(["accessToken"]),
   },
   mounted() {
     // store.session.set("accessToken", null);
-  }
+  },
 };
 </script>
 
