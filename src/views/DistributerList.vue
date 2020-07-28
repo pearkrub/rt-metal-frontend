@@ -92,10 +92,12 @@ export default {
       }
     },
     callbackCreate(distributer) {
+      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
       this.distributers = [...this.distributers, distributer];
     },
     callbackEdit(distributer) {
       console.log(distributer);
+      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
       this.getDistributer();
     },
     editDistributor(data) {

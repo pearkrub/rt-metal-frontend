@@ -38,6 +38,16 @@ export const postDistribute = (payload) => {
   return axios.post(url, payload, config);
 };
 
+export const updateDistribute = (payload, id) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/distributor/${id}`;
+  return axios.put(url, payload, config);
+};
+
 export const deleteDistribute = (id) => {
   const config = {
     headers: {

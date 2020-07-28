@@ -177,7 +177,7 @@
   </div>
 </template>
 <script>
-import { postDistribute } from "../api";
+import { updateDistribute } from "../api";
 import { get } from "lodash";
 export default {
   name: "EditDistributerModal",
@@ -225,7 +225,10 @@ export default {
             distributorTelNo: this.distributorTelNo,
             remark: this.remark,
           };
-          const response = await postDistribute(payload);
+          const response = await updateDistribute(
+            payload,
+            get(this.distributorData, "id")
+          );
           this.callbackCreate(response.data);
           this.$refs.closeModalBtn.click();
         }
