@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="modal fade add-distributer-modal"
+      class="modal fade edit-distributer-modal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="myLargeModalLabel"
@@ -157,6 +157,7 @@
               class="btn btn-secondary"
               ref="closeModalBtn"
               data-dismiss="modal"
+              @click="onCloseModal"
             >ยกเลิก</button>
             <button type="button" class="btn btn-primary" @click="submit">บันทึก</button>
           </div>
@@ -167,7 +168,6 @@
               class="btn btn-secondary"
               ref="closeModalBtn"
               data-dismiss="modal"
-              @click="onCloseModal"
             >ยกเลิก</button>
             <button type="button" class="btn btn-primary disabled">รอสักครู่...</button>
           </div>
@@ -178,10 +178,14 @@
 </template>
 <script>
 import { postDistribute } from "../api";
-// import { get } from "lodash";
+import { get } from "lodash";
 export default {
-  name: "AddDistributerModal",
+  name: "EditDistributerModal",
   props: {
+    distributorData: {
+      type: Object,
+      default: null,
+    },
     callbackCreate: {
       type: Function,
       default: () => {},
@@ -230,6 +234,36 @@ export default {
       }
       this.loading = false;
     },
+    setupData() {
+      console.log(this.distributorData);
+      this.distributorName = get(this.distributorData, "distributorName", "");
+      this.distributorTaxId = get(this.distributorData, "distributorTaxId", "");
+      this.distributorAddress1 = get(
+        this.distributorData,
+        "distributorAddress1",
+        ""
+      );
+      this.distributorAddress2 = get(
+        this.distributorData,
+        "distributorAddress2",
+        ""
+      );
+      this.distributorPostcode = get(
+        this.distributorData,
+        "distributorPostcode",
+        ""
+      );
+      this.distributorContactName = get(
+        this.distributorData,
+        "distributorContactName",
+        ""
+      );
+      this.distributorTelNo = get(this.distributorData, "distributorTelNo", "");
+      this.remark = get(this.distributorData, "remark", "");
+    },
+  },
+  mounted() {
+    this.setupData();
   },
 };
 </script>
