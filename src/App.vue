@@ -34,4 +34,8 @@ a {
 .container {
   margin-top: 30px;
 }
+.table,
+td {
+  vertical-align: middle !important;
+}
 </style>

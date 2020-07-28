@@ -6,7 +6,7 @@
         <div class="btn-search" @click="getDistributer">ค้นหา</div>
       </div>
     </form>
-    <table class="table table-bordered table-sm">
+    <table class="table-bordered table-sm table-hover table">
       <thead>
         <tr>
           <th>ลำดับที่</th>

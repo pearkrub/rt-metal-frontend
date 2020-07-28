@@ -7,7 +7,7 @@
       </div>
     </form>
     <router-link class="add-purchase-btn" to="/create-purchase">+ เพิ่มรายการซื้อ</router-link>
-    <table class="table table-bordered table-sm">
+    <table class="table-bordered table-sm table-hover table">
       <thead>
         <tr>
           <th>ลำดับที่</th>
@@ -16,16 +16,7 @@
           <th>วันที่</th>
           <th>บันทึกโดย</th>
           <th>สถานะ</th>
-          <th>
-            <button
-              class="btn btn-success btn-sm"
-              data-toggle="modal"
-              data-target=".add-distributer-modal"
-              @click="openModalCreate = true"
-              data-backdrop="static"
-              data-keyboard="false"
-            >+เพิ่ม</button>
-          </th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -35,16 +26,16 @@
             <div class="data-list">{{ purChase.distributor.distributorName }}</div>
           </td>
           <td>
-            <div class="data-list">{{ purChase.amount }}</div>
+            <div class="data-list text-right">{{ purChase.amount }}</div>
           </td>
           <td>
-            <div class="data-list">{{ formatDate(purChase.createdAt) }}</div>
+            <div class="data-list text-center">{{ formatDate(purChase.createdAt) }}</div>
           </td>
           <td>
             <div class="data-list"></div>
           </td>
           <td>
-            <div class="data-list" v-html="getStatus(purChase.purchaseTransStatuses)"></div>
+            <div class="data-list flex-center" v-html="getStatus(purChase.purchaseTransStatuses)"></div>
           </td>
           <td class="text-center">
             <button
@@ -188,5 +179,9 @@ th {
   text-align: center;
   justify-content: center;
   color: #ffffff;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
 }
 </style>
