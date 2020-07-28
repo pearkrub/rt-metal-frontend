@@ -153,39 +153,4 @@ th {
 .data-list {
   margin-left: 10px;
 }
-.search-box {
-  width: auto;
-  height: 49px;
-  left: 94px;
-  top: 163px;
-  margin-bottom: 15px;
-
-  background: #0275d8;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  align-content: flex-end;
-  justify-content: flex-end;
-}
-.input-search {
-  width: 240px;
-  height: 41px;
-  background: #ffffff;
-  border: 0px solid #cccccc;
-  box-sizing: border-box;
-  border-radius: 4px;
-  padding-left: 10px;
-}
-.btn-search {
-  width: 98px;
-  font-family: Helvetica Neue;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 21px;
-  margin-left: 15px;
-  /* or 131% */
-  cursor: pointer;
-  color: #cccccc;
-}
 </style>

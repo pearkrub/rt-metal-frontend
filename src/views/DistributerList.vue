@@ -1,5 +1,11 @@
 <template>
   <div>
+    <form @submit.prevent="submitForm">
+      <div class="search-box">
+        <input type="text" v-model="search" class="input-search" />
+        <div class="btn-search" @click="getDistributer">ค้นหา</div>
+      </div>
+    </form>
     <table class="table table-bordered table-sm">
       <thead>
         <tr>
@@ -72,12 +78,13 @@ export default {
       distributer: null,
       openModalCreate: false,
       openModalEdit: false,
+      search: "",
     };
   },
   methods: {
     async getDistributer() {
       try {
-        const response = await getDistribute({});
+        const response = await getDistribute({ search: this.search });
         console.log(response.data);
         this.distributers = response.data;
       } catch (error) {
@@ -129,6 +136,9 @@ export default {
           // https://sweetalert2.github.io/#handling-dismissals
         }
       });
+    },
+    submitForm() {
+      this.getDistributer();
     },
   },
   mounted() {
