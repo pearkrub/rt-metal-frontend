@@ -20,7 +20,7 @@
               @click="openModalCreate = true"
               data-backdrop="static"
               data-keyboard="false"
-            >+เพิ่ม</button>
+            >+ เพิ่ม</button>
           </th>
         </tr>
       </thead>

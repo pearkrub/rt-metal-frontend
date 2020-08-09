@@ -117,7 +117,6 @@ th {
   border: 1px solid #0275d8;
   box-sizing: border-box;
   border-radius: 4px;
-  font-family: Helvetica Neue;
   font-style: normal;
   font-weight: bold;
   font-size: 16px;

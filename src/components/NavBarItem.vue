@@ -79,7 +79,9 @@ export default {
     },
     linkTo(name) {
       this.page = name;
-      this.$router.push({ name: name });
+      if (this.$route.name != name) {
+        this.$router.push({ name: name });
+      }
     },
   },
 };

@@ -31,7 +31,7 @@ html {
   padding-left: 10px;
 }
 .btn-search {
-  width: 98px;
+  width: 60px;
   font-family: Helvetica Neue;
   font-style: normal;
   font-weight: normal;
@@ -41,4 +41,200 @@ html {
   /* or 131% */
   cursor: pointer;
   color: #cccccc;
+}
+.header-purchase {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: #000000;
+}
+.label-purchase {
+  font-family: Helvetica Neue;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 24px;
+  color: #373a3c;
+  display: flex;
+  align-items: center;
+}
+.item-purchase {
+  margin-left: 18px;
+  margin-top: 5px;
+}
+.address-box {
+  margin-top: 15px;
+}
+.header-panel-address {
+  margin-top: 10px;
+}
+.date-box {
+  width: 147px;
+  height: 38px;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 18px;
+  margin-top: 8px;
+}
+.remark-box {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 5px;
+}
+.form-merchant {
+  width: 235px !important;
+  height: 39px !important;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
+
+  color: #373a3c;
+}
+.product-box {
+  margin-top: 65px;
+}
+.btn-action {
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  width: 94px;
+  height: 38px;
+  margin-right: 10px;
+  color: #ffffff;
+  text-align: center;
+}
+.btn-add-product {
+  background: #0275d8;
+  border: 1px solid #0275d8;
+}
+.btn-edit-product {
+  background: #f0ad4e;
+  border: 1px solid #f0ad4e;
+}
+.btn-delete-product {
+  background: #d9534f;
+  border: 1px solid #d9534f;
+}
+
+.btn-report {
+  width: 151px;
+  height: 37px;
+
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin-left: 8px;
+  color: #373a3c;
+}
+.icon-btn {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 5px;
+}
+.table-product {
+  margin-top: 19px;
+}
+.btn-add-merchant {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 21px;
+  /* identical to box height, or 131% */
+
+  color: #ffffff;
+  width: 59px;
+  height: 39px;
+  background: #0275d8;
+  border: 1px solid #0275d8;
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+.label-summary {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 24px;
+  /* or 133% */
+
+  color: #373a3c;
+}
+.input-discount {
+  width: 152.68px;
+  height: 33.61px;
+
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
+
+  text-align: right;
+
+  color: #999999;
+}
+.item-summary {
+  margin-top: 9px;
+}
+.btn-footer {
+  width: 109px !important;
+  height: 38px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin: 13px;
+}
+.btn-footer-cancel {
+  background: #e6e6e6;
+  border: 1px solid #adadad;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  /* identical to box height, or 131% */
+
+  text-align: center;
+
+  color: #373a3c;
+}
+
+.btn-footer-submit {
+  background: #e6e6e6;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  /* identical to box height, or 131% */
+
+  text-align: center;
+  background: #0275d8;
+  border: 1px solid #0275d8;
+  color: #ffffff;
+}
+.footer-form {
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
