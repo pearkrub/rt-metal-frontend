@@ -1,37 +1,14 @@
 <template >
   <div>
     <div class="header-purchase">สร้างรายการซื้อ</div>
-    <purchase-header :sync-data="syncData"></purchase-header>
+    <purchase-header :sync-data="syncData" purshaseType="update"></purchase-header>
     <div class="row product-box">
-      <div class="col-6">
-        <button
-          class="btn btn-add-product btn-action"
-          @click="openModalProduct = true"
-          data-toggle="modal"
-          data-target=".add-purchase-product-modal"
-          data-backdrop="static"
-          data-keyboard="false"
-        >เพิ่ม</button>
-        <button
-          class="btn btn-edit-product btn-action"
-          @click="openModalProductEdit = true"
-          data-toggle="modal"
-          data-target=".edit-purchase-product-modal"
-          data-backdrop="static"
-          data-keyboard="false"
-          :disabled="!productSelected"
-        >แก้ไข</button>
-        <button
-          class="btn btn-delete-product btn-action"
-          :disabled="!productSelected"
-          @click="deleteProduct"
-        >ลบ</button>
-      </div>
+      <div class="col-6"></div>
       <div class="col-6 text-right">
-        <button class="btn btn-report disabled">
+        <button class="btn btn-report">
           <img src="../assets/img/check.svg" class="icon-btn" /> อนุมัติการสั่งซื้อ
         </button>
-        <button class="btn btn-report disabled">พิมพ์ใบเสนอซื้อ</button>
+        <button class="btn btn-report" @click="printPurchase">พิมพ์ใบเสนอซื้อ</button>
         <button class="btn btn-report disabled">พิมพ์ใบซื้อ</button>
       </div>
     </div>
@@ -116,12 +93,7 @@
     </div>
     <div class="row footer-form">
       <div class="col-12 text-center">
-        <button class="btn btn-footer btn-footer-cancel" @click="redirectToHome">ยกเลิก</button>
-        <button
-          class="btn btn-footer btn-footer-submit"
-          :disabled="products.length == 0"
-          @click="savePurchase"
-        >บันทึก</button>
+        <button class="btn btn-footer btn-footer-cancel" @click="redirectToHome">กลับหน้าหลัก</button>
       </div>
     </div>
     <AddProductToPurchase
@@ -145,11 +117,11 @@ import AddProductToPurchase from "../components/AddProductToPurchase";
 import EditProductToPurchase from "../components/EditProductToPurchase";
 import { sumBy } from "lodash";
 import numeral from "numeral";
-import Swal from "sweetalert2";
-import { createPurchase } from "../api";
+// import Swal from "sweetalert2";
+import { generatePurchasePDF } from "../api";
 
 export default {
-  name: "CreatePurchase",
+  name: "PurchaseUpdate",
   components: {
     PurchaseHeader,
     AddProductToPurchase,
@@ -173,68 +145,6 @@ export default {
     },
   },
   methods: {
-    async savePurchase() {
-      if (this.products.length > 0) {
-        this;
-        Swal.fire({
-          title: "บันทึกรายการสั่งซื้อ",
-          // text: "You won't be able to revert this!",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonColor: "#d33",
-          cancelButtonColor: "#3085d6",
-          cancelButtonText: "บันทึก",
-          confirmButtonText: "ยกเลิก",
-        }).then(async (result) => {
-          if (!result.isConfirmed) {
-            try {
-              const payload = {
-                purchaseTransStatus: "PENDING",
-                distributorId: this.distribuData.distributor.id,
-                remark: this.distribuData.remark,
-                purchaseItems: this.productPayload(),
-              };
-              const purChase = await createPurchase(payload);
-              console.log(purChase.data);
-              Swal.fire({
-                title: "สร้างรายการซื้อสำเร็จ",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: `ตกลง`,
-                cancelButtonText: `กลับหน้าหลัก`,
-              }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                  this.$router.push({
-                    name: "purchase",
-                    params: { purchaseId: purChase.data.id },
-                  });
-                } else {
-                  this.redirectToHome();
-                }
-              });
-              console.log(payload);
-            } catch (error) {
-              console.log(error);
-            }
-            this.loading = false;
-          }
-        });
-      }
-    },
-    productPayload() {
-      return this.products.map((product) => {
-        return {
-          quantityStock: product.quantityImport,
-          quantityDistributor: product.quantityformDistributor,
-          price: product.totalPrice,
-          remark: product.remark,
-          productId: product.productId,
-          unitPurchaseId: product.unitFromDistributorId,
-          unitStockId: product.unitImportId,
-        };
-      });
-    },
     redirectToHome() {
       this.$router.push({ name: "purchase-list" });
     },
@@ -247,27 +157,7 @@ export default {
         this.openModalProductEdit = false;
       }, 500);
     },
-    callbackCreate(product) {
-      this.products = [...this.products, product];
-      this.closeModal();
-    },
-    callbackUpdate(product) {
-      let products = [...this.products];
-      let index = products.findIndex(
-        (item) => item.productCode == product.productCode
-      );
-      products[index] = product;
-      this.products = products;
-      this.productSelected = product;
-      this.closeModal();
-    },
-    selectProduct(product) {
-      if (product != this.productSelected) {
-        this.productSelected = product;
-      } else {
-        this.productSelected = null;
-      }
-    },
+
     roundPrecision(number, places) {
       const factor = Math.pow(10, places);
       return Math.round(number * factor) / factor;
@@ -283,26 +173,53 @@ export default {
     formatFloat(number) {
       return numeral(number).format("0,0.00");
     },
-    deleteProduct() {
-      if (this.productSelected) {
-        Swal.fire({
-          title: "ลบสินค้าออกจากรายการ?",
-          // text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#d33",
-          cancelButtonColor: "#3085d6",
-          confirmButtonText: "ลบสินค้า",
-          cancelButtonText: "ยกเลิก",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.products = this.products.filter((product) => {
-              return product.productCode != this.productSelected.productCode;
-            });
-            this.productSelected = null;
-          }
-        });
+    async printPurchase() {
+      try {
+        const id = this.$route.params.purchaseId;
+        const response = await generatePurchasePDF(id);
+        this.printPreview(response.data);
+      } catch (error) {
+        console.log(error);
       }
+    },
+    printPreview(data, type = "application/pdf") {
+      let blob = null;
+      blob = this.b64toBlob(data, type);
+      const blobURL = URL.createObjectURL(blob);
+      const theWindow = window.open(blobURL);
+      const theDoc = theWindow.document;
+      const theScript = document.createElement("script");
+      //function injectThis() {
+      //  window.print();
+      //}
+      theScript.innerHTML = `window.onload = purchase${this.$route.params.purchaseId};`;
+      theDoc.body.appendChild(theScript);
+    },
+
+    b64toBlob(content, contentType) {
+      contentType = contentType || "";
+      const sliceSize = 512;
+      // method which converts base64 to binary
+      const byteCharacters = window.atob(content);
+
+      const byteArrays = [];
+      for (
+        let offset = 0;
+        offset < byteCharacters.length;
+        offset += sliceSize
+      ) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+      const blob = new Blob(byteArrays, {
+        type: contentType,
+      }); // statement which creates the blob
+      return blob;
     },
   },
   data() {

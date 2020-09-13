@@ -328,7 +328,7 @@ export default {
             const productObj = {
               productCode: this.productCode,
               productName: this.productName,
-              productId: this.productSelected.id,
+              productId: this.productSelected.productId,
               quantityImport: parseFloat(this.quantityImport),
               quantityformDistributor: parseFloat(this.quantityformDistributor),
               unitName: this.unitImportName,

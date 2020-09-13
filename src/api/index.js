@@ -109,6 +109,26 @@ export const getPurchase = (payload) => {
   return axios.get(url, config);
 };
 
+export const createPurchase = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/purchase`;
+  return axios.post(url, payload, config);
+};
+
+export const generatePurchasePDF = (id) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/purchase/${id}/generatePdf`;
+  return axios.post(url, {}, config);
+};
+
 export const getMasterData = () => {
   const config = {
     headers: {

@@ -56,6 +56,14 @@ const routes = [
     },
   },
   {
+    path: "/purchase/:purchaseId",
+    name: "purchase",
+    component: views.PurchaseUpdate,
+    meta: {
+      middleware: [isAuth],
+    },
+  },
+  {
     path: "/create-purchase",
     name: "create-purchase",
     component: views.CreatePurchase,

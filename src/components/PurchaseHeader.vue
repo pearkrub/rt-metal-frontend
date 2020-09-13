@@ -36,7 +36,11 @@
                 ผู้จัดจำหน่าย:
                 <label class="item-purchase">
                   <div class="input-group">
-                    <select class="form-control form-merchant" v-model="distributorId">
+                    <select
+                      class="form-control form-merchant"
+                      :disabled="purshaseType=='update'"
+                      v-model="distributorId"
+                    >
                       <option
                         v-for="(item, index) in distributors"
                         :key="index"
@@ -50,6 +54,7 @@
                       @click="openModalCreate = true"
                       data-backdrop="static"
                       data-keyboard="false"
+                      v-if="purshaseType == 'create'"
                     >เพิ่ม</button>
                   </div>
                 </label>

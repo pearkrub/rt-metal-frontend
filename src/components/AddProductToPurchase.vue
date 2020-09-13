@@ -374,6 +374,8 @@ export default {
         } catch (error) {
           this.loading = false;
         }
+      } else {
+        this.createProduct();
       }
     },
     async createProduct() {
@@ -382,10 +384,30 @@ export default {
         if (validateResult) {
           this.loading = true;
           const payload = {
+            productName: this.productName,
             remark: this.remark,
           };
           const response = await postProduct(payload);
-          this.callbackCreate(response.data);
+          let newProduct = response.data;
+
+          const productObj = {
+            productCode: newProduct.productCode,
+            productName: this.productName,
+            productId: newProduct.id,
+            quantityImport: parseFloat(this.quantityImport),
+            quantityformDistributor: parseFloat(this.quantityformDistributor),
+            unitName: this.unitImportName,
+            unitFromDistributor: this.unitFromDistributor,
+            unitImport: this.unitImport,
+            pricePerUnitRound: this.pricePerUnitRound,
+            priceDiscount: this.priceDiscount,
+            totalPrice: parseFloat(this.priceImport),
+            unitFromDistributorId: this.unitFromDistributorId,
+            unitImportId: this.unitImportId,
+            remark: this.remark,
+          };
+
+          this.callbackCreate(productObj);
           this.$refs.closeModalBtn.click();
         }
         this.loading = false;
@@ -420,7 +442,9 @@ export default {
         this.masterData = masterData.data;
         const firstUnit = head(get(masterData, "data.units", []));
         this.unitFromDistributor = get(firstUnit, "code", "");
+        this.unitFromDistributorId = get(firstUnit, "id", "");
         this.unitImport = get(firstUnit, "code", "");
+        this.unitImportId = get(firstUnit, "id", "");
       } catch (error) {
         console.log("get product error.", error.response);
         this.masterData = [];
@@ -447,14 +471,15 @@ export default {
     this.getProduct();
     this.getMasterData();
   },
-  // watch: {
-  //   quantityformDistributor(newValue) {
-  //     const result = newValue
-  //       .replace(/\D/g, "")
-  //       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  //     Vue.nextTick(() => (this.quantityformDistributor = result));
-  //   },
-  // },
+  watch: {
+    product(type) {
+      if (type == "new") {
+        this.productName = "";
+      } else {
+        this.productName = this.productSelected.productName;
+      }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
