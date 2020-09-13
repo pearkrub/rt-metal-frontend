@@ -4,9 +4,28 @@
     <purchase-header :sync-data="syncData"></purchase-header>
     <div class="row product-box">
       <div class="col-6">
-        <button class="btn btn-add-product btn-action">เพิ่ม</button>
-        <button class="btn btn-edit-product btn-action">แก้ไข</button>
-        <button class="btn btn-delete-product btn-action">ลบ</button>
+        <button
+          class="btn btn-add-product btn-action"
+          @click="openModalProduct = true"
+          data-toggle="modal"
+          data-target=".add-purchase-product-modal"
+          data-backdrop="static"
+          data-keyboard="false"
+        >เพิ่ม</button>
+        <button
+          class="btn btn-edit-product btn-action"
+          @click="openModalProductEdit = true"
+          data-toggle="modal"
+          data-target=".edit-purchase-product-modal"
+          data-backdrop="static"
+          data-keyboard="false"
+          :disabled="!productSelected"
+        >แก้ไข</button>
+        <button
+          class="btn btn-delete-product btn-action"
+          :disabled="!productSelected"
+          @click="deleteProduct"
+        >ลบ</button>
       </div>
       <div class="col-6 text-right">
         <button class="btn btn-report disabled">
@@ -32,35 +51,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>P0001</td>
-              <td>เหล็ก</td>
-              <td>100</td>
-              <td>เส้น</td>
-              <td class="text-right">5,000.00</td>
-              <td class="text-right">1,000.00</td>
-              <td class="text-right">22.000.00</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>P0001</td>
-              <td>เหล็ก</td>
-              <td>100</td>
-              <td>เส้น</td>
-              <td class="text-right">5,000.00</td>
-              <td class="text-right">1,000.00</td>
-              <td class="text-right">22.000.00</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>P0001</td>
-              <td>เหล็ก</td>
-              <td>100</td>
-              <td>เส้น</td>
-              <td class="text-right">5,000.00</td>
-              <td class="text-right">1,000.00</td>
-              <td class="text-right">22.000.00</td>
+            <tr
+              v-for="(product, key) in products"
+              :key="key"
+              style="cursor: pointer"
+              title="เลือก"
+              @click="selectProduct(product)"
+              :class="product == productSelected ? 'selected-product': ''"
+            >
+              <td>{{ key +1 }}</td>
+              <td>{{ product.productCode }}</td>
+              <td>{{ product.productName }}</td>
+              <td>{{ formatNumber(product.quantityImport) }}</td>
+              <td>{{ product.unitName }}</td>
+              <td class="text-right">{{ formatNumber(product.pricePerUnitRound) }}</td>
+              <td class="text-right">{{ formatNumber(product.priceDiscount) }}</td>
+              <td class="text-right">{{ formatNumber(product.totalPrice) }}</td>
             </tr>
           </tbody>
         </table>
@@ -71,16 +77,21 @@
         <div class="row item-summary">
           <div class="col-10 label-summary">รวม:</div>
           <div class="col-2">
-            <label class="label-summary">1,223,600.00</label>
+            <label class="label-summary">{{ formatFloat(totalPrice) }}</label>
           </div>
         </div>
         <div class="row item-summary">
           <div class="col-10 label-summary">
             หักเศษ:
-            <input type="text" class="input-discount" readonly value="5,000.00" />
+            <input
+              type="text"
+              class="input-discount"
+              readonly
+              :value="formatNumber(totalDiscount)"
+            />
           </div>
           <div class="col-2">
-            <label class="label-summary">1,218,600.00</label>
+            <label class="label-summary">{{ formatFloat(totalPriceExcludeDiscount) }}</label>
           </div>
         </div>
         <div class="row item-summary">
@@ -88,7 +99,7 @@
             <input type="text" class="input-discount" readonly value="VAT 7%" />
           </div>
           <div class="col-2">
-            <label class="label-summary">84,602.00</label>
+            <label class="label-summary">{{ formatFloat(totalVat) }}</label>
           </div>
         </div>
         <div class="row item-summary">
@@ -97,7 +108,7 @@
           </div>
           <div class="col-2">
             <label class="label-summary" style="font-size: 20px">
-              <b>1,293,202.00</b>
+              <b>{{ formatFloat(totalPriceIncludeVat) }}</b>
             </label>
           </div>
         </div>
@@ -109,29 +120,137 @@
         <button class="btn btn-footer btn-footer-submit">บันทึก</button>
       </div>
     </div>
+    <AddProductToPurchase
+      v-if="openModalProduct"
+      :callback-create="callbackCreate"
+      :on-close-modal="closeModal"
+      :product-list="products"
+    />
+    <EditProductToPurchase
+      v-if="openModalProductEdit"
+      :callback-create="callbackUpdate"
+      :on-close-modal="closeModal"
+      :product-selected="productSelected"
+    />
   </div>
 </template>
 <script>
 import moment from "moment";
 import PurchaseHeader from "../components/PurchaseHeader";
+import AddProductToPurchase from "../components/AddProductToPurchase";
+import EditProductToPurchase from "../components/EditProductToPurchase";
+import { sumBy } from "lodash";
+import numeral from "numeral";
+import Swal from "sweetalert2";
+
 export default {
   name: "CreatePurchase",
   components: {
     PurchaseHeader,
+    AddProductToPurchase,
+    EditProductToPurchase,
   },
-  computed: {},
+  computed: {
+    totalPrice() {
+      return sumBy(this.products, "totalPrice");
+    },
+    totalDiscount() {
+      return sumBy(this.products, "priceDiscount");
+    },
+    totalPriceExcludeDiscount() {
+      return this.totalPrice - this.totalDiscount;
+    },
+    totalVat() {
+      return this.roundPrecision(this.totalPrice * 0.07, 2);
+    },
+    totalPriceIncludeVat() {
+      return this.totalPrice + this.totalVat;
+    },
+  },
   methods: {
     syncData(data) {
       this.distribuData = data;
+    },
+    closeModal() {
+      setTimeout(() => {
+        this.openModalProduct = false;
+        this.openModalProductEdit = false;
+      }, 500);
+    },
+    callbackCreate(product) {
+      this.products = [...this.products, product];
+      this.closeModal();
+    },
+    callbackUpdate(product) {
+      let products = [...this.products];
+      let index = products.findIndex(
+        (item) => item.productCode == product.productCode
+      );
+      products[index] = product;
+      this.products = products;
+      this.productSelected = product;
+      this.closeModal();
+    },
+    selectProduct(product) {
+      if (product != this.productSelected) {
+        this.productSelected = product;
+      } else {
+        this.productSelected = null;
+      }
+    },
+    roundPrecision(number, places) {
+      const factor = Math.pow(10, places);
+      return Math.round(number * factor) / factor;
+    },
+    isInt(n) {
+      return n % 1 === 0;
+    },
+    formatNumber(number) {
+      return this.isInt(number)
+        ? numeral(number).format()
+        : numeral(number).format("0,0.00");
+    },
+    formatFloat(number) {
+      return numeral(number).format("0,0.00");
+    },
+    deleteProduct() {
+      if (this.productSelected) {
+        Swal.fire({
+          title: "ลบสินค้าออกจากรายการ?",
+          // text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "ลบสินค้า",
+          cancelButtonText: "ยกเลิก",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.products = this.products.filter((product) => {
+              return product.productCode != this.productSelected.productCode;
+            });
+            this.productSelected = null;
+          }
+        });
+      }
     },
   },
   data() {
     return {
       createDate: moment().format("DD/MM/YYYY"),
       distribuData: null,
+      openModalProduct: false,
+      openModalProductEdit: false,
+      products: [],
+      productSelected: null,
     };
   },
 };
 </script>
 <style lang="scss">
+.selected-product {
+  color: #155724;
+  background-color: #d4edda !important;
+  border-color: #c3e6cb !important;
+}
 </style>

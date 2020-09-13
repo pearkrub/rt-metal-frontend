@@ -108,3 +108,13 @@ export const getPurchase = (payload) => {
   let url = `${env.api_endpoint}/api/purchase`;
   return axios.get(url, config);
 };
+
+export const getMasterData = () => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/master`;
+  return axios.get(url, config);
+};

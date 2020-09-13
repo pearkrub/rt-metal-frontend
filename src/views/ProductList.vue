@@ -42,10 +42,7 @@
               data-keyboard="false"
               @click="editProduct(product)"
             >แก้ไข</button>&nbsp;
-            <button
-              class="btn btn-danger btn-sm"
-              @click="confirmDeleteProduct(distributer)"
-            >ลบ</button>
+            <button class="btn btn-danger btn-sm" @click="confirmDeleteProduct(product)">ลบ</button>
           </td>
         </tr>
       </tbody>

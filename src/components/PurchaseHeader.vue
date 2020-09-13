@@ -8,7 +8,7 @@
         <div id="collapse1" class="panel-collapse collapse in show">
           <div class="row">
             <div class="address-box col-6">
-              <div class="label-purchase">
+              <div class="label-purchase" v-if="purshaseType == 'update'">
                 รายการสั่งซื้อเลขที่:
                 <label class="item-purchase">HP63040001</label>
               </div>
@@ -129,6 +129,10 @@ export default {
     syncData: {
       type: Function,
       default: () => {},
+    },
+    purshaseType: {
+      type: String,
+      default: "create",
     },
   },
   name: "PurchaseHeader",
