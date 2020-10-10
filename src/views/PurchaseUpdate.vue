@@ -33,11 +33,15 @@
           :disabled="
             purchaseStatus != 'APPROVED' && purchaseStatus != 'SUCCESS'
           "
-          @click="printPurchase"
+          @click="printPurchase('ORDER')"
         >
           พิมพ์ใบเสนอซื้อ
         </button>
-        <button class="btn btn-report" :disabled="purchaseStatus != 'SUCCESS'">
+        <button
+          class="btn btn-report"
+          :disabled="purchaseStatus != 'SUCCESS'"
+          @click="printPurchase('PURCHASE')"
+        >
           พิมพ์ใบซื้อ
         </button>
       </div>
@@ -224,10 +228,13 @@ export default {
     formatFloat(number) {
       return numeral(number).format("0,0.00");
     },
-    async printPurchase() {
+    async printPurchase(documentType) {
       try {
         const id = this.$route.params.purchaseId;
-        const response = await generatePurchasePDF(id);
+        const payload = {
+          documentType: documentType,
+        };
+        const response = await generatePurchasePDF(id, payload);
         this.printPreview(response.data);
       } catch (error) {
         console.log(error);

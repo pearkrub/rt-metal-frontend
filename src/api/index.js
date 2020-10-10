@@ -149,14 +149,14 @@ export const updatePurchaseInventory = (payload) => {
   return axios.post(url, payload, config);
 };
 
-export const generatePurchasePDF = (id) => {
+export const generatePurchasePDF = (id, payload) => {
   const config = {
     headers: {
       Authorization: "Bearer " + store.session.get("accessToken"),
     },
   };
   let url = `${env.api_endpoint}/api/purchase/${id}/generatePdf`;
-  return axios.post(url, {}, config);
+  return axios.post(url, payload, config);
 };
 
 export const getMasterData = () => {
