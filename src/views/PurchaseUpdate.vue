@@ -1,15 +1,45 @@
 <template >
   <div>
     <div class="header-purchase">สร้างรายการซื้อ</div>
-    <purchase-header :sync-data="syncData" purshaseType="update"></purchase-header>
+    <purchase-header
+      v-if="!loading"
+      :sync-data="syncData"
+      purshaseType="update"
+      :purchaseStatus="purchaseStatus"
+      :distributorData="distributorData"
+      :purchaseData="purchase"
+    ></purchase-header>
     <div class="row product-box">
       <div class="col-6"></div>
       <div class="col-6 text-right">
-        <button class="btn btn-report">
-          <img src="../assets/img/check.svg" class="icon-btn" /> อนุมัติการสั่งซื้อ
+        <button
+          class="btn btn-report"
+          @click="updateStatus('APPROVED')"
+          v-if="purchaseStatus == 'PENDING'"
+        >
+          <img src="../assets/img/check.svg" class="icon-btn" />
+          อนุมัติการสั่งซื้อ
         </button>
-        <button class="btn btn-report" @click="printPurchase">พิมพ์ใบเสนอซื้อ</button>
-        <button class="btn btn-report disabled">พิมพ์ใบซื้อ</button>
+        <button
+          class="btn btn-report-success"
+          @click="updateStatus('SUCCESS')"
+          v-if="purchaseStatus == 'APPROVED'"
+        >
+          <img src="../assets/img/check.svg" class="icon-btn" />
+          ยืนยันการรับสินค้า
+        </button>
+        <button
+          class="btn btn-report"
+          :disabled="
+            purchaseStatus != 'APPROVED' && purchaseStatus != 'SUCCESS'
+          "
+          @click="printPurchase"
+        >
+          พิมพ์ใบเสนอซื้อ
+        </button>
+        <button class="btn btn-report" :disabled="purchaseStatus != 'SUCCESS'">
+          พิมพ์ใบซื้อ
+        </button>
       </div>
     </div>
     <div class="row table-product">
@@ -33,17 +63,20 @@
               :key="key"
               style="cursor: pointer"
               title="เลือก"
-              @click="selectProduct(product)"
-              :class="product == productSelected ? 'selected-product': ''"
+              :class="product == productSelected ? 'selected-product' : ''"
             >
-              <td>{{ key +1 }}</td>
-              <td>{{ product.productCode }}</td>
-              <td>{{ product.productName }}</td>
-              <td>{{ formatNumber(product.quantityImport) }}</td>
-              <td>{{ product.unitName }}</td>
-              <td class="text-right">{{ formatNumber(product.pricePerUnitRound) }}</td>
-              <td class="text-right">{{ formatNumber(product.priceDiscount) }}</td>
-              <td class="text-right">{{ formatNumber(product.totalPrice) }}</td>
+              <td>{{ key + 1 }}</td>
+              <td>{{ product.product.productCode }}</td>
+              <td>{{ product.product.productName }}</td>
+              <td>{{ formatNumber(product.quantityStock) }}</td>
+              <td>{{ product.unitPurchase.name }}</td>
+              <td class="text-right">
+                {{ formatNumber(product.pricePerUnit) }}
+              </td>
+              <td class="text-right">
+                {{ formatNumber(product.discount) }}
+              </td>
+              <td class="text-right">{{ formatNumber(product.price) }}</td>
             </tr>
           </tbody>
         </table>
@@ -68,7 +101,9 @@
             />
           </div>
           <div class="col-2">
-            <label class="label-summary">{{ formatFloat(totalPriceExcludeDiscount) }}</label>
+            <label class="label-summary">{{
+              formatFloat(totalPriceExcludeDiscount)
+            }}</label>
           </div>
         </div>
         <div class="row item-summary">
@@ -93,7 +128,12 @@
     </div>
     <div class="row footer-form">
       <div class="col-12 text-center">
-        <button class="btn btn-footer btn-footer-cancel" @click="redirectToHome">กลับหน้าหลัก</button>
+        <button
+          class="btn btn-footer btn-footer-cancel"
+          @click="redirectToHome"
+        >
+          กลับหน้าหลัก
+        </button>
       </div>
     </div>
     <AddProductToPurchase
@@ -115,10 +155,15 @@ import moment from "moment";
 import PurchaseHeader from "../components/PurchaseHeader";
 import AddProductToPurchase from "../components/AddProductToPurchase";
 import EditProductToPurchase from "../components/EditProductToPurchase";
-import { sumBy } from "lodash";
+import { sumBy, get } from "lodash";
 import numeral from "numeral";
-// import Swal from "sweetalert2";
-import { generatePurchasePDF } from "../api";
+import Swal from "sweetalert2";
+import {
+  generatePurchasePDF,
+  getPurchaseById,
+  updateStatusPurchase,
+  updatePurchaseInventory,
+} from "../api";
 
 export default {
   name: "PurchaseUpdate",
@@ -129,10 +174,10 @@ export default {
   },
   computed: {
     totalPrice() {
-      return sumBy(this.products, "totalPrice");
+      return sumBy(this.products, "price");
     },
     totalDiscount() {
-      return sumBy(this.products, "priceDiscount");
+      return sumBy(this.products, "discount");
     },
     totalPriceExcludeDiscount() {
       return this.totalPrice - this.totalDiscount;
@@ -142,6 +187,12 @@ export default {
     },
     totalPriceIncludeVat() {
       return this.totalPrice + this.totalVat;
+    },
+    purchaseStatus() {
+      return get(this.purchaseTransStatus, "purchaseTransStatus", "");
+    },
+    distributorData() {
+      return get(this.purchase, "distributor");
     },
   },
   methods: {
@@ -221,6 +272,62 @@ export default {
       }); // statement which creates the blob
       return blob;
     },
+    async getPurchase() {
+      this.loading = true;
+      try {
+        const response = await getPurchaseById(this.$route.params.purchaseId);
+        console.log(response.data);
+        this.purchase = response.data.purchase;
+        this.products = response.data.purchaseItems;
+        this.purchaseTransStatus = response.data.purchaseTransStatus;
+      } catch (error) {
+        console.log(error);
+      }
+      this.loading = false;
+    },
+    async updateStatus(status) {
+      Swal.fire({
+        title:
+          status == "APPROVED" ? "อนุมัติรายการสั่งซื้อ" : "ยืนยันการรับสินค้า",
+        // text: "You won't be able to revert this!",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        cancelButtonText: "บันทึก",
+        confirmButtonText: "ยกเลิก",
+      }).then(async (result) => {
+        if (!result.isConfirmed) {
+          if (status == "APPROVED") {
+            this.updatePurchase(status);
+          } else {
+            this.updateInventory(this.$route.params.purchaseId);
+          }
+        }
+      });
+    },
+    async updatePurchase(status) {
+      try {
+        const payload = {
+          status: status,
+        };
+        await updateStatusPurchase(this.$route.params.purchaseId, payload);
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateInventory(purchaseId) {
+      try {
+        const payload = {
+          purchaseId: purchaseId,
+        };
+        await updatePurchaseInventory(payload);
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   data() {
     return {
@@ -230,7 +337,13 @@ export default {
       openModalProductEdit: false,
       products: [],
       productSelected: null,
+      purchase: null,
+      loading: false,
+      purchaseTransStatus: null,
     };
+  },
+  mounted() {
+    this.getPurchase();
   },
 };
 </script>

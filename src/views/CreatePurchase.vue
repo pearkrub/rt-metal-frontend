@@ -11,7 +11,9 @@
           data-target=".add-purchase-product-modal"
           data-backdrop="static"
           data-keyboard="false"
-        >เพิ่ม</button>
+        >
+          เพิ่ม
+        </button>
         <button
           class="btn btn-edit-product btn-action"
           @click="openModalProductEdit = true"
@@ -20,16 +22,21 @@
           data-backdrop="static"
           data-keyboard="false"
           :disabled="!productSelected"
-        >แก้ไข</button>
+        >
+          แก้ไข
+        </button>
         <button
           class="btn btn-delete-product btn-action"
           :disabled="!productSelected"
           @click="deleteProduct"
-        >ลบ</button>
+        >
+          ลบ
+        </button>
       </div>
       <div class="col-6 text-right">
         <button class="btn btn-report disabled">
-          <img src="../assets/img/check.svg" class="icon-btn" /> อนุมัติการสั่งซื้อ
+          <img src="../assets/img/check.svg" class="icon-btn" />
+          อนุมัติการสั่งซื้อ
         </button>
         <button class="btn btn-report disabled">พิมพ์ใบเสนอซื้อ</button>
         <button class="btn btn-report disabled">พิมพ์ใบซื้อ</button>
@@ -57,15 +64,19 @@
               style="cursor: pointer"
               title="เลือก"
               @click="selectProduct(product)"
-              :class="product == productSelected ? 'selected-product': ''"
+              :class="product == productSelected ? 'selected-product' : ''"
             >
-              <td>{{ key +1 }}</td>
+              <td>{{ key + 1 }}</td>
               <td>{{ product.productCode }}</td>
               <td>{{ product.productName }}</td>
               <td>{{ formatNumber(product.quantityImport) }}</td>
               <td>{{ product.unitName }}</td>
-              <td class="text-right">{{ formatNumber(product.pricePerUnitRound) }}</td>
-              <td class="text-right">{{ formatNumber(product.priceDiscount) }}</td>
+              <td class="text-right">
+                {{ formatNumber(product.pricePerUnitRound) }}
+              </td>
+              <td class="text-right">
+                {{ formatNumber(product.priceDiscount) }}
+              </td>
               <td class="text-right">{{ formatNumber(product.totalPrice) }}</td>
             </tr>
           </tbody>
@@ -91,7 +102,9 @@
             />
           </div>
           <div class="col-2">
-            <label class="label-summary">{{ formatFloat(totalPriceExcludeDiscount) }}</label>
+            <label class="label-summary">{{
+              formatFloat(totalPriceExcludeDiscount)
+            }}</label>
           </div>
         </div>
         <div class="row item-summary">
@@ -116,12 +129,19 @@
     </div>
     <div class="row footer-form">
       <div class="col-12 text-center">
-        <button class="btn btn-footer btn-footer-cancel" @click="redirectToHome">ยกเลิก</button>
+        <button
+          class="btn btn-footer btn-footer-cancel"
+          @click="redirectToHome"
+        >
+          ยกเลิก
+        </button>
         <button
           class="btn btn-footer btn-footer-submit"
           :disabled="products.length == 0"
           @click="savePurchase"
-        >บันทึก</button>
+        >
+          บันทึก
+        </button>
       </div>
     </div>
     <AddProductToPurchase
@@ -175,7 +195,6 @@ export default {
   methods: {
     async savePurchase() {
       if (this.products.length > 0) {
-        this;
         Swal.fire({
           title: "บันทึกรายการสั่งซื้อ",
           // text: "You won't be able to revert this!",

@@ -3,7 +3,7 @@ import axios from "axios";
 import store from "store2";
 
 export const login = (payload) => {
-  let url = `${env.api_endpoint}/api/login`;
+  let url = `${env.api_endpoint}/api/auth/login`;
   return axios.post(url, payload);
 };
 
@@ -116,6 +116,36 @@ export const createPurchase = (payload) => {
     },
   };
   let url = `${env.api_endpoint}/api/purchase`;
+  return axios.post(url, payload, config);
+};
+
+export const getPurchaseById = (id) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/purchase/${id}`;
+  return axios.get(url, config);
+};
+
+export const updateStatusPurchase = (id, payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/purchase/${id}/status`;
+  return axios.post(url, payload, config);
+};
+
+export const updatePurchaseInventory = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/inventory/stockIn`;
   return axios.post(url, payload, config);
 };
 

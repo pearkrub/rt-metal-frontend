@@ -3,14 +3,16 @@
     <div class="panel-group">
       <div class="panel panel-default">
         <div class="panel-heading header-panel-address">
-          <a data-toggle="collapse" class="btn btn-info" href="#collapse1">ซ่อน/แสดง ข้อมูลที่อยู่</a>
+          <a data-toggle="collapse" class="btn btn-info" href="#collapse1"
+            >ซ่อน/แสดง ข้อมูลที่อยู่</a
+          >
         </div>
         <div id="collapse1" class="panel-collapse collapse in show">
           <div class="row">
             <div class="address-box col-6">
               <div class="label-purchase" v-if="purshaseType == 'update'">
                 รายการสั่งซื้อเลขที่:
-                <label class="item-purchase">HP63040001</label>
+                <label class="item-purchase">{{ purchaseCode }}</label>
               </div>
               <div class="label-purchase">
                 วันที่:
@@ -18,15 +20,18 @@
               </div>
               <div class="label-purchase">
                 สถานะ:
-                <label class="item-purchase">
-                  <div class="status-pending">รอการอนุมัติ</div>
-                </label>
+                <label class="item-purchase" v-html="statusPurchase"> </label>
               </div>
             </div>
             <div class="address-box col-6">
               <div class="label-purchase">หมายเหตุ:</div>
               <div class="label-purchase">
-                <textarea v-model="remark" class="remark-box" cols="35" rows="3"></textarea>
+                <textarea
+                  v-model="remark"
+                  class="remark-box"
+                  cols="35"
+                  rows="3"
+                ></textarea>
               </div>
             </div>
           </div>
@@ -38,14 +43,16 @@
                   <div class="input-group">
                     <select
                       class="form-control form-merchant"
-                      :disabled="purshaseType=='update'"
+                      :disabled="purshaseType == 'update'"
                       v-model="distributorId"
                     >
                       <option
                         v-for="(item, index) in distributors"
                         :key="index"
                         :value="item.id"
-                      >{{ item.distributorName }}</option>
+                      >
+                        {{ item.distributorName }}
+                      </option>
                     </select>
                     <button
                       class="btn btn-primary btn-add-merchant"
@@ -55,7 +62,9 @@
                       data-backdrop="static"
                       data-keyboard="false"
                       v-if="purshaseType == 'create'"
-                    >เพิ่ม</button>
+                    >
+                      เพิ่ม
+                    </button>
                   </div>
                 </label>
               </div>
@@ -65,49 +74,53 @@
             <div class="address-box col-6">
               <div class="label-purchase">
                 รหัส:
-                <label class="item-purchase">{{ getData(distributor, 'id') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "id")
+                }}</label>
               </div>
               <div class="label-purchase">
                 เลขประจำตัวผู้เสียภาษีอากร:
-                <label
-                  class="item-purchase"
-                >{{ getData(distributor, 'distributorTaxId') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "distributorTaxId")
+                }}</label>
               </div>
               <div class="label-purchase">
                 ที่อยู่ 1:
-                <label
-                  class="item-purchase"
-                >{{ getData(distributor, 'distributorAddress1') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "distributorAddress1")
+                }}</label>
               </div>
               <div class="label-purchase">
                 ที่อยู่ 2:
-                <label
-                  class="item-purchase"
-                >{{ getData(distributor, 'distributorAddress2', '-') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "distributorAddress2", "-")
+                }}</label>
               </div>
               <div class="label-purchase">
                 รหัสไปรษณีย์:
-                <label
-                  class="item-purchase"
-                >{{ getData(distributor, 'distributorPostcode') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "distributorPostcode")
+                }}</label>
               </div>
             </div>
             <div class="address-box col-6">
               <div class="label-purchase">
                 ผู้ติดต่อ:
-                <label
-                  class="item-purchase"
-                >{{ getData(distributor, 'distributorContactName') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "distributorContactName")
+                }}</label>
               </div>
               <div class="label-purchase">
                 เบอร์โทรศัพท์:
-                <label
-                  class="item-purchase"
-                >{{ getData(distributor, 'distributorTelNo') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "distributorTelNo")
+                }}</label>
               </div>
               <div class="label-purchase">
                 หมายเหตุ:
-                <label class="item-purchase">{{ getData(distributor, 'remark', '-') }}</label>
+                <label class="item-purchase">{{
+                  getData(distributor, "remark", "-")
+                }}</label>
               </div>
             </div>
           </div>
@@ -139,6 +152,18 @@ export default {
       type: String,
       default: "create",
     },
+    purchaseStatus: {
+      type: String,
+      default: "PENDING",
+    },
+    distributorData: {
+      type: Object,
+      default: null,
+    },
+    purchaseData: {
+      type: Object,
+      default: null,
+    },
   },
   name: "PurchaseHeader",
   components: {
@@ -147,8 +172,8 @@ export default {
   data() {
     return {
       distributors: [],
-      distributorId: "",
-      remark: "",
+      distributorId: get(this.distributorData, "id"),
+      remark: get(this.purchaseData, "remark"),
       openModalCreate: false,
     };
   },
@@ -164,14 +189,26 @@ export default {
       }
       return null;
     },
+    statusPurchase() {
+      return this.getStatus(this.purchaseStatus);
+    },
+    purchaseCode() {
+      return get(this.purchaseData, "purchaseCode", "");
+    },
   },
   methods: {
     async doGetDistribute() {
       try {
         const response = await getDistribute();
         this.distributors = get(response, "data");
-        let distributor = head(this.distributors);
-        this.distributorId = get(distributor, "id");
+        console.log(this.distributorData);
+        if (this.distributorData) {
+          let distributor = this.distributorData;
+          this.distributorId = get(distributor, "id");
+        } else {
+          let distributor = head(this.distributors);
+          this.distributorId = get(distributor, "id");
+        }
       } catch (error) {
         console.log(error);
         this.distributors = [];
@@ -197,6 +234,17 @@ export default {
       setTimeout(() => {
         this.openModalCreate = false;
       }, 500);
+    },
+    getStatus(status) {
+      return this.convertStatus(status.toLowerCase());
+    },
+    convertStatus(status) {
+      const statusList = {
+        pending: '<div class="status-pending">รอการอนุมัติ</div>',
+        approved: '<div class="status-approved">อนุมัติแล้ว</div>',
+        success: '<div class="status-success">ได้รับสินค้าแล้ว</div>',
+      };
+      return statusList[status];
     },
   },
   mounted() {

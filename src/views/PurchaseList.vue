@@ -6,7 +6,9 @@
         <div class="btn-search" @click="doGetPurChase">ค้นหา</div>
       </div>
     </form>
-    <router-link class="add-purchase-btn" to="/create-purchase">+ เพิ่มรายการซื้อ</router-link>
+    <router-link class="add-purchase-btn" to="/create-purchase"
+      >+ เพิ่มรายการซื้อ</router-link
+    >
     <table class="table-bordered table-sm table-hover table">
       <thead>
         <tr>
@@ -23,28 +25,35 @@
         <tr v-for="(purChase, index) in purChases" :key="index">
           <td class="text-center">{{ index + 1 }}</td>
           <td>
-            <div class="data-list">{{ purChase.distributor.distributorName }}</div>
+            <div class="data-list">
+              {{ purChase.distributor.distributorName }}
+            </div>
           </td>
           <td>
-            <div class="data-list text-right">{{ purChase.amount }}</div>
+            <div class="data-list text-right">
+              {{ formatNumber(purChase.amount) }}
+            </div>
           </td>
           <td>
-            <div class="data-list text-center">{{ formatDate(purChase.createdAt) }}</div>
+            <div class="data-list text-center">
+              {{ formatDate(purChase.createdAt) }}
+            </div>
           </td>
           <td>
-            <div class="data-list"></div>
+            <div class="data-list">
+              {{ purChase.user.firstName }} {{ purChase.user.lastName }}
+            </div>
           </td>
           <td>
-            <div class="data-list flex-center" v-html="getStatus(purChase.purchaseTransStatuses)"></div>
+            <div
+              class="data-list flex-center"
+              v-html="getStatus(purChase.purchaseTransStatuses)"
+            ></div>
           </td>
           <td class="text-center">
-            <button
-              class="btn btn-sm"
-              data-toggle="modal"
-              data-target=".edit-distributer-modal"
-              data-backdrop="static"
-              data-keyboard="false"
-            >แก้ไข</button>
+            <button class="btn btn-sm" @click="editPurchase(purChase.id)">
+              แก้ไข
+            </button>
           </td>
         </tr>
       </tbody>
@@ -54,6 +63,8 @@
 <script>
 import { getPurchase } from "../api";
 import moment from "moment";
+import { get } from "lodash";
+import numeral from "numeral";
 
 export default {
   name: "PurchaseList",
@@ -81,9 +92,7 @@ export default {
     },
     getStatus(purchaseTransStatuses) {
       return this.convertStatus(
-        purchaseTransStatuses[
-          purchaseTransStatuses.length - 1
-        ].purchaseTransStatus.toLowerCase()
+        get(purchaseTransStatuses[0], "purchaseTransStatus", "").toLowerCase()
       );
     },
     convertStatus(status) {
@@ -93,6 +102,23 @@ export default {
         success: '<div class="status-success">ได้รับสินค้าแล้ว</div>',
       };
       return statusList[status];
+    },
+    editPurchase(id) {
+      this.$router.push({
+        name: "purchase",
+        params: { purchaseId: id },
+      });
+    },
+    formatNumber(number) {
+      return this.isInt(number)
+        ? numeral(number).format()
+        : numeral(number).format("0,0.00");
+    },
+    formatFloat(number) {
+      return numeral(number).format("0,0.00");
+    },
+    isInt(n) {
+      return n % 1 === 0;
     },
   },
   mounted() {
