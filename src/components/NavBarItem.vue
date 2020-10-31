@@ -33,8 +33,8 @@
           </li>
           <li
             class="nav-item"
-            :class="{ active: page == 'sell' }"
-            @click="page = 'sell'"
+            :class="{ active: page == 'sell-list' }"
+            @click="linkTo('sell-list')"
           >
             <a class="nav-link">ขาย</a>
           </li>

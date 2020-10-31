@@ -31,7 +31,9 @@
         <button
           class="btn btn-report"
           :disabled="
-            purchaseStatus != 'APPROVED' && purchaseStatus != 'SUCCESS'
+            purchaseStatus != 'APPROVED' &&
+            purchaseStatus != 'SUCCESS' &&
+            purchaseStatus != 'SUCCESS_BY_CREDIT'
           "
           @click="printPurchase('ORDER')"
         >
@@ -39,7 +41,9 @@
         </button>
         <button
           class="btn btn-report"
-          :disabled="purchaseStatus != 'SUCCESS'"
+          :disabled="
+            purchaseStatus != 'SUCCESS' && purchaseStatus != 'SUCCESS_BY_CREDIT'
+          "
           @click="printPurchase('PURCHASE')"
         >
           พิมพ์ใบซื้อ
@@ -325,15 +329,37 @@ export default {
       }
     },
     async updateInventory(purchaseId) {
-      try {
-        const payload = {
-          purchaseId: purchaseId,
-          paymentMethod: "CASH",
-        };
-        await updatePurchaseInventory(payload);
-        window.location.reload();
-      } catch (error) {
-        console.log(error);
+      const inputOptions = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            CASH: "เงินสด",
+            CREDIT: "เครดิต",
+          });
+        }, 500);
+      });
+
+      const { value: paymentMethod } = await Swal.fire({
+        title: "ช่องทางการชำระเงิน",
+        input: "radio",
+        inputOptions: inputOptions,
+        inputValidator: (value) => {
+          if (!value) {
+            return "กรุณาเลือก ช่องทางการชำระเงิน";
+          }
+        },
+      });
+
+      if (paymentMethod) {
+        try {
+          const payload = {
+            purchaseId: purchaseId,
+            paymentMethod: paymentMethod,
+          };
+          await updatePurchaseInventory(payload);
+          // window.location.reload();
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
   },

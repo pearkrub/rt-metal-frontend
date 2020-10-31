@@ -21,7 +21,9 @@
                     value="new"
                     v-model="product"
                   />
-                  <label class="form-check-label" for="gridRadios1">สินค้าใหม่</label>
+                  <label class="form-check-label" for="gridRadios1"
+                    >สินค้าใหม่</label
+                  >
                 </div>
               </div>
               <div class="col-sm-8" v-if="products.length > 0">
@@ -34,7 +36,9 @@
                     value="old"
                     v-model="product"
                   />
-                  <label class="form-check-label" for="gridRadios2">สินค้าเดิม</label>
+                  <label class="form-check-label" for="gridRadios2"
+                    >สินค้าเดิม</label
+                  >
                 </div>
               </div>
             </div>
@@ -49,12 +53,16 @@
                   v-model="productCode"
                   name="productCode"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('productCode')}"
+                  :class="{ 'is-invalid': errors.has('productCode') }"
                   @change="selectProduct"
                 >
-                  <option v-for="(code, index) in productCodeList" :key="index">{{ code }}</option>
+                  <option v-for="(code, index) in productCodeList" :key="index">
+                    {{ code }}
+                  </option>
                 </select>
-                <div class="invalid-feedback">{{ errors.first('productCode') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("productCode") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -71,10 +79,12 @@
                   name="productName"
                   v-model="productName"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('productName')}"
+                  :class="{ 'is-invalid': errors.has('productName') }"
                   :readonly="isReadonlyForm"
                 />
-                <div class="invalid-feedback">{{ errors.first('productName') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("productName") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -91,9 +101,13 @@
                   name="quantityformDistributor"
                   v-model="quantityformDistributor"
                   v-validate="'required|decimal:2'"
-                  :class="{'is-invalid': errors.has('quantityformDistributor')}"
+                  :class="{
+                    'is-invalid': errors.has('quantityformDistributor'),
+                  }"
                 />
-                <div class="invalid-feedback">{{ errors.first('quantityformDistributor') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("quantityformDistributor") }}
+                </div>
               </div>
               <div class="col-sm-3">
                 <select
@@ -101,16 +115,20 @@
                   v-model="unitFromDistributor"
                   name="unitFromDistributor"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('unitFromDistributor')}"
+                  :class="{ 'is-invalid': errors.has('unitFromDistributor') }"
                   @change="selectUnitFromDistributor"
                 >
                   <option
                     v-for="(unit, index) in units"
                     :key="index"
                     :value="unit.code"
-                  >{{ unit.name }}</option>
+                  >
+                    {{ unit.name }}
+                  </option>
                 </select>
-                <div class="invalid-feedback">{{ errors.first('unitFromDistributor') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("unitFromDistributor") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -127,9 +145,11 @@
                   name="quantityImport"
                   v-model="quantityImport"
                   v-validate="'required|decimal:2'"
-                  :class="{'is-invalid': errors.has('quantityImport')}"
+                  :class="{ 'is-invalid': errors.has('quantityImport') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('quantityImport') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("quantityImport") }}
+                </div>
               </div>
               <div class="col-sm-3">
                 <select
@@ -137,16 +157,20 @@
                   v-model="unitImport"
                   name="unitImport"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('unitImport')}"
+                  :class="{ 'is-invalid': errors.has('unitImport') }"
                   @change="selectUnitFromImport"
                 >
                   <option
                     v-for="(unit, index) in units"
                     :key="index"
                     :value="unit.code"
-                  >{{ unit.name }}</option>
+                  >
+                    {{ unit.name }}
+                  </option>
                 </select>
-                <div class="invalid-feedback">{{ errors.first('unitImport') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("unitImport") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -163,9 +187,11 @@
                   name="priceImport"
                   v-model="priceImport"
                   v-validate="'required|decimal:2'"
-                  :class="{'is-invalid': errors.has('priceImport')}"
+                  :class="{ 'is-invalid': errors.has('priceImport') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('priceImport') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("priceImport") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -182,10 +208,12 @@
                   name="pricePerUnitRound"
                   v-model="pricePerUnitRound"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('pricePerUnitRound')}"
+                  :class="{ 'is-invalid': errors.has('pricePerUnitRound') }"
                   readonly
                 />
-                <div class="invalid-feedback">{{ errors.first('pricePerUnitRound') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("pricePerUnitRound") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -202,14 +230,18 @@
                   name="priceDiscount"
                   v-model="priceDiscount"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('priceDiscount')}"
+                  :class="{ 'is-invalid': errors.has('priceDiscount') }"
                   readonly
                 />
-                <div class="invalid-feedback">{{ errors.first('priceDiscount') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("priceDiscount") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
-              <label for="input9" class="col-sm-4 col-form-label">หมายเหตุ:</label>
+              <label for="input9" class="col-sm-4 col-form-label"
+                >หมายเหตุ:</label
+              >
               <div class="col-sm-8">
                 <textarea
                   type="text"
@@ -229,8 +261,12 @@
               ref="closeModalBtn"
               data-dismiss="modal"
               @click="onCloseModal"
-            >ยกเลิก</button>
-            <button type="button" class="btn btn-primary" @click="submit">บันทึก</button>
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary" @click="submit">
+              บันทึก
+            </button>
           </div>
           <div class="modal-footer" v-else>
             <button
@@ -240,8 +276,12 @@
               ref="closeModalBtn"
               data-dismiss="modal"
               @click="onCloseModal"
-            >ยกเลิก</button>
-            <button type="button" class="btn btn-primary disabled">รอสักครู่...</button>
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary disabled">
+              รอสักครู่...
+            </button>
           </div>
         </div>
       </div>
@@ -251,6 +291,7 @@
 <script>
 import { postProduct, getProduct, getMasterData } from "../api";
 import { get, head } from "lodash";
+import { Validator } from "vee-validate";
 // import Vue from "vue";
 
 export default {
@@ -468,6 +509,34 @@ export default {
     },
   },
   mounted() {
+    const dict = {
+      custom: {
+        productName: {
+          required: "กรุณากรอกข้อมูล ชื่อสินค้า",
+        },
+        quantityformDistributor: {
+          required: "กรุณากรอกข้อมูล ปริมาณ (จากผู้จัดจำหน่าย)",
+          decimal: "กรุณาระบุข้อมูลเป็นตัวเลข หรือทศนิยมไม่เกิน 2 ตำแหน่ง",
+        },
+        quantityImport: {
+          required: "กรุณากรอกข้อมูล ปริมาณ (เข้าคลังสินค้า)",
+          decimal: "กรุณาระบุข้อมูลเป็นตัวเลข หรือทศนิยมไม่เกิน 2 ตำแหน่ง",
+        },
+        priceImport: {
+          required: "กรุณากรอกข้อมูล ราคาซื้อ",
+        },
+        distributorContactName: {
+          required: "กรุณากรอกข้อมูล ชื่อผู้ติดต่อ",
+        },
+        distributorTelNo: {
+          required: "กรุณากรอกข้อมูล เบอรโทรศัพท์",
+        },
+      },
+    };
+
+    Validator.localize("th");
+    Validator.localize("th", dict);
+
     this.getProduct();
     this.getMasterData();
   },

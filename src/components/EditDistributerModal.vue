@@ -24,9 +24,11 @@
                   name="distributorName"
                   v-model="distributorName"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('distributorName')}"
+                  :class="{ 'is-invalid': errors.has('distributorName') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('distributorName') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("distributorName") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -43,9 +45,11 @@
                   name="distributorTaxId"
                   v-model="distributorTaxId"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('distributorTaxId')}"
+                  :class="{ 'is-invalid': errors.has('distributorTaxId') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('distributorTaxId') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("distributorTaxId") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -62,13 +66,17 @@
                   name="distributorAddress1"
                   v-model="distributorAddress1"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('distributorAddress1')}"
+                  :class="{ 'is-invalid': errors.has('distributorAddress1') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('distributorAddress1') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("distributorAddress1") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
-              <label for="input5" class="col-sm-4 col-form-label">ทีีอยู่ 2:</label>
+              <label for="input5" class="col-sm-4 col-form-label"
+                >ที่อยู่ 2:</label
+              >
               <div class="col-sm-8">
                 <input
                   type="text"
@@ -94,9 +102,11 @@
                   name="distributorPostcode"
                   v-model="distributorPostcode"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('distributorPostcode')}"
+                  :class="{ 'is-invalid': errors.has('distributorPostcode') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('distributorPostcode') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("distributorPostcode") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -113,9 +123,13 @@
                   name="distributorContactName"
                   v-model="distributorContactName"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('distributorContactName')}"
+                  :class="{
+                    'is-invalid': errors.has('distributorContactName'),
+                  }"
                 />
-                <div class="invalid-feedback">{{ errors.first('distributorContactName') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("distributorContactName") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -132,13 +146,17 @@
                   name="distributorTelNo"
                   v-model="distributorTelNo"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('distributorTelNo')}"
+                  :class="{ 'is-invalid': errors.has('distributorTelNo') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('distributorTelNo') }}</div>
+                <div class="invalid-feedback">
+                  {{ errors.first("distributorTelNo") }}
+                </div>
               </div>
             </div>
             <div class="form-group row">
-              <label for="input9" class="col-sm-4 col-form-label">หมายเหตุ:</label>
+              <label for="input9" class="col-sm-4 col-form-label"
+                >หมายเหตุ:</label
+              >
               <div class="col-sm-8">
                 <textarea
                   type="text"
@@ -158,8 +176,12 @@
               ref="closeModalBtn"
               data-dismiss="modal"
               @click="onCloseModal"
-            >ยกเลิก</button>
-            <button type="button" class="btn btn-primary" @click="submit">บันทึก</button>
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary" @click="submit">
+              บันทึก
+            </button>
           </div>
           <div class="modal-footer" v-else>
             <button
@@ -168,8 +190,12 @@
               class="btn btn-secondary"
               ref="closeModalBtn"
               data-dismiss="modal"
-            >ยกเลิก</button>
-            <button type="button" class="btn btn-primary disabled">รอสักครู่...</button>
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary disabled">
+              รอสักครู่...
+            </button>
           </div>
         </div>
       </div>
@@ -178,6 +204,7 @@
 </template>
 <script>
 import { updateDistribute } from "../api";
+import { Validator } from "vee-validate";
 import { get } from "lodash";
 export default {
   name: "EditDistributerModal",
@@ -266,6 +293,31 @@ export default {
     },
   },
   mounted() {
+    const dict = {
+      custom: {
+        distributorName: {
+          required: "กรุณากรอกข้อมูล ชื่อผู้จัดจำหน่าย",
+        },
+        distributorTaxId: {
+          required: "กรุณากรอกข้อมูล เลขประจำตัวผู้เสียภาษีอากร",
+        },
+        distributorAddress1: {
+          required: "กรุณากรอกข้อมูล ที่อยู่",
+        },
+        distributorPostcode: {
+          required: "กรุณากรอกข้อมูล รหัสไปรษณีย์",
+        },
+        distributorContactName: {
+          required: "กรุณากรอกข้อมูล ชื่อผู้ติดต่อ",
+        },
+        distributorTelNo: {
+          required: "กรุณากรอกข้อมูล เบอรโทรศัพท์",
+        },
+      },
+    };
+
+    Validator.localize("th");
+    Validator.localize("th", dict);
     this.setupData();
   },
 };

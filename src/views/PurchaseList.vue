@@ -47,7 +47,7 @@
           <td>
             <div
               class="data-list flex-center"
-              v-html="getStatus(purChase.purchaseTransStatuses)"
+              v-html="getStatus(purChase.purchaseStatus)"
             ></div>
           </td>
           <td class="text-center">
@@ -58,12 +58,14 @@
         </tr>
       </tbody>
     </table>
+    <PaginationNav />
   </div>
 </template>
 <script>
 import { getPurchase } from "../api";
 import moment from "moment";
-import { get } from "lodash";
+import PaginationNav from "../components/PaginationNav";
+// import { get } from "lodash";
 import numeral from "numeral";
 
 export default {
@@ -73,6 +75,9 @@ export default {
       purChases: [],
       search: "",
     };
+  },
+  components: {
+    PaginationNav,
   },
   methods: {
     async doGetPurChase() {
@@ -90,16 +95,19 @@ export default {
     submitForm() {
       this.doGetPurChase();
     },
-    getStatus(purchaseTransStatuses) {
-      return this.convertStatus(
-        get(purchaseTransStatuses[0], "purchaseTransStatus", "").toLowerCase()
-      );
+    getStatus(purchaseStatus) {
+      if (purchaseStatus) {
+        return this.convertStatus(purchaseStatus.toLowerCase());
+      } else {
+        return '<div class="status-pending">รอการอนุมัติ</div>';
+      }
     },
     convertStatus(status) {
       const statusList = {
         pending: '<div class="status-pending">รอการอนุมัติ</div>',
         approved: '<div class="status-approved">อนุมัติแล้ว</div>',
         success: '<div class="status-success">ได้รับสินค้าแล้ว</div>',
+        success_by_credit: '<div class="status-success">ได้รับสินค้าแล้ว</div>',
       };
       return statusList[status];
     },

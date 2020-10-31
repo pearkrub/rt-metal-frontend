@@ -41,14 +41,18 @@
                   name="productName"
                   v-model="productName"
                   v-validate="'required'"
-                  :class="{'is-invalid': errors.has('productName')}"
+                  :class="{ 'is-invalid': errors.has('productName') }"
                 />
-                <div class="invalid-feedback">{{ errors.first('productName') }}</div>
+                <div v-if="errors.has('productName')" class="invalid-feedback">
+                  กรุณากรอกข้อมูล ชื่อสินค้า
+                </div>
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="input9" class="col-sm-4 col-form-label">หมายเหตุ:</label>
+              <label for="input9" class="col-sm-4 col-form-label"
+                >หมายเหตุ:</label
+              >
               <div class="col-sm-8">
                 <textarea
                   type="text"
@@ -68,8 +72,12 @@
               ref="closeModalBtn"
               data-dismiss="modal"
               @click="onCloseModal"
-            >ยกเลิก</button>
-            <button type="button" class="btn btn-primary" @click="submit">บันทึก</button>
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary" @click="submit">
+              บันทึก
+            </button>
           </div>
           <div class="modal-footer" v-else>
             <button
@@ -78,8 +86,12 @@
               class="btn btn-secondary"
               ref="closeModalBtn"
               data-dismiss="modal"
-            >ยกเลิก</button>
-            <button type="button" class="btn btn-primary disabled">รอสักครู่...</button>
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary disabled">
+              รอสักครู่...
+            </button>
           </div>
         </div>
       </div>

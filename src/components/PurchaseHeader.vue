@@ -22,6 +22,10 @@
                 สถานะ:
                 <label class="item-purchase" v-html="statusPurchase"> </label>
               </div>
+              <div class="label-purchase" v-if="showPaymentMethod">
+                ช่องทางการชำระเงิน:
+                <label class="item-purchase" v-html="paymentMethod"></label>
+              </div>
             </div>
             <div class="address-box col-6">
               <div class="label-purchase">หมายเหตุ:</div>
@@ -192,6 +196,17 @@ export default {
     statusPurchase() {
       return this.getStatus(this.purchaseStatus);
     },
+    paymentMethod() {
+      return this.purchaseStatus == "SUCCESS"
+        ? '<div class="status-success">เงินสด</div>'
+        : '<div class="status-approved">บัตรเครดิต</div>';
+    },
+    showPaymentMethod() {
+      return (
+        this.purchaseStatus == "SUCCESS" ||
+        this.purchaseStatus == "SUCCESS_BY_CREDIT"
+      );
+    },
     purchaseCode() {
       return get(this.purchaseData, "purchaseCode", "");
     },
@@ -243,6 +258,7 @@ export default {
         pending: '<div class="status-pending">รอการอนุมัติ</div>',
         approved: '<div class="status-approved">อนุมัติแล้ว</div>',
         success: '<div class="status-success">ได้รับสินค้าแล้ว</div>',
+        success_by_credit: '<div class="status-success">ได้รับสินค้าแล้ว</div>',
       };
       return statusList[status];
     },
