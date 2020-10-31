@@ -15,7 +15,7 @@
         <button
           class="btn btn-report"
           @click="updateStatus('APPROVED')"
-          v-if="purchaseStatus == 'PENDING'"
+          v-if="purchaseStatus == 'PENDING' && userRole == 'admin'"
         >
           <img src="../assets/img/check.svg" class="icon-btn" />
           อนุมัติการสั่งซื้อ
@@ -23,7 +23,7 @@
         <button
           class="btn btn-report-success"
           @click="updateStatus('SUCCESS')"
-          v-if="purchaseStatus == 'APPROVED'"
+          v-if="purchaseStatus == 'APPROVED' && userRole == 'admin'"
         >
           <img src="../assets/img/check.svg" class="icon-btn" />
           ยืนยันการรับสินค้า
@@ -166,6 +166,7 @@ import EditProductToPurchase from "../components/EditProductToPurchase";
 import { sumBy, get } from "lodash";
 import numeral from "numeral";
 import Swal from "sweetalert2";
+import { mapState } from "vuex";
 import {
   generatePurchasePDF,
   getPurchaseById,
@@ -181,6 +182,7 @@ export default {
     EditProductToPurchase,
   },
   computed: {
+    ...mapState(["userProfile"]),
     totalPrice() {
       return sumBy(this.products, "price");
     },
@@ -201,6 +203,9 @@ export default {
     },
     distributorData() {
       return get(this.purchase, "distributor");
+    },
+    userRole() {
+      return get(this.userProfile, "role", "");
     },
   },
   methods: {

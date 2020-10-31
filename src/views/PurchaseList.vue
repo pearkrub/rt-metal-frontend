@@ -29,7 +29,7 @@
       </thead>
       <tbody>
         <tr v-for="(purChase, index) in purChases" :key="index">
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ startPage + index + 1 }}</td>
           <td>
             <div class="data-list">
               {{ purChase.distributor.distributorName }}
@@ -88,6 +88,11 @@ export default {
   components: {
     PaginationNav,
   },
+  computed: {
+    startPage() {
+      return (this.pagination.page - 1) * this.pagination.perPage;
+    },
+  },
   methods: {
     async doGetPurChase() {
       try {
@@ -126,7 +131,7 @@ export default {
       if (purchaseStatus) {
         return this.convertStatus(purchaseStatus.toLowerCase());
       } else {
-        return '<div class="status-pending">รอการอนุมัติ</div>';
+        return "";
       }
     },
     convertStatus(status) {

@@ -61,6 +61,9 @@ export default {
       return this.currentPage - 1 * this.perPage + this.perPage;
     },
     to() {
+      if (this.currentPage == this.lastPage) {
+        return this.paginationData.total;
+      }
       return this.currentPage * this.perPage;
     },
     lastPage() {
