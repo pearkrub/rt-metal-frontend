@@ -328,6 +328,7 @@ export default {
       try {
         const payload = {
           purchaseId: purchaseId,
+          paymentMethod: "CASH",
         };
         await updatePurchaseInventory(payload);
         window.location.reload();

@@ -18,7 +18,7 @@ const routes = [
   {
     path: "/",
     name: "home-page",
-    component: views.Home,
+    component: views.PurchaseList,
     meta: {
       middleware: [isAuth],
     },
@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/home",
     name: "home",
-    component: views.Home,
+    component: views.PurchaseList,
     meta: {
       middleware: [isAuth],
     },
