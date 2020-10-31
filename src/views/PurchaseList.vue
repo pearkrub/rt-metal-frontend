@@ -15,7 +15,13 @@
           <th>ลำดับที่</th>
           <th>ผู้จัดจำหน่าย</th>
           <th>ราคา</th>
-          <th>วันที่</th>
+          <th @click="sortdata" style="cursor: pointer">
+            วันที่
+            <font-awesome-icon
+              v-if="orderBy == 'createdAt|ASC'"
+              icon="sort-up"
+            /><font-awesome-icon v-else icon="sort-down" />
+          </th>
           <th>บันทึกโดย</th>
           <th>สถานะ</th>
           <th></th>
@@ -58,7 +64,7 @@
         </tr>
       </tbody>
     </table>
-    <PaginationNav />
+    <PaginationNav :pagination-data="pagination" :on-get-data="onGetData" />
   </div>
 </template>
 <script>
@@ -74,6 +80,9 @@ export default {
     return {
       purChases: [],
       search: "",
+      pagination: { total: 0, perPage: 0, lastPage: 0, page: 0 },
+      currentPage: "",
+      orderBy: "createdAt|DESC",
     };
   },
   components: {
@@ -82,11 +91,29 @@ export default {
   methods: {
     async doGetPurChase() {
       try {
-        const response = await getPurchase({ search: this.search });
+        let payload = { search: this.search, order_by: this.orderBy };
+        if (this.currentPage) {
+          payload.page = this.currentPage;
+        }
+        const response = await getPurchase(payload);
         this.purChases = response.data.data;
+        this.pagination = response.data.pagination;
       } catch (error) {
         this.purChases = [];
       }
+    },
+    sortdata() {
+      this.currentPage = 1;
+      if (this.orderBy == "createdAt|DESC") {
+        this.orderBy = "createdAt|ASC";
+      } else {
+        this.orderBy = "createdAt|DESC";
+      }
+      this.doGetPurChase();
+    },
+    onGetData(params) {
+      this.currentPage = params.page;
+      this.doGetPurChase();
     },
     formatDate(date) {
       let dateFormat = moment(date).format("DD/MM/YYYY");
