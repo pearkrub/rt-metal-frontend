@@ -32,6 +32,10 @@
         <div class="col-9">{{ companyProfile.phoneNumber2 }}</div>
       </div>
       <div class="row">
+        <div class="col-3">เบอร์โทรศัพท์ 3</div>
+        <div class="col-9">{{ companyProfile.phoneNumber3 }}</div>
+      </div>
+      <div class="row">
         <div class="col-3">Line ID</div>
         <div class="col-9">{{ companyProfile.lineId }}</div>
       </div>
@@ -82,7 +86,6 @@ export default {
       }
     },
     editCompanyProfile(data) {
-      console.log(data)
       this.openModalEdit = true;
       this.companyProfile = data;
     },

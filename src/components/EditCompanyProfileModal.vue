@@ -12,7 +12,7 @@
           <div class="bd-example">
             <div class="form-group row">
               <label for="inputEmail3" class="col-sm-4 col-form-label">
-                รหัส
+                ชื่อบริษัท
                 <span style="color: red">*</span> :
               </label>
               <div class="col-sm-8">
@@ -23,6 +23,162 @@
                   name="companyName"
                   placeholder="ชื่อบริษัท"
                   v-model="companyName"
+                  v-validate="'required'"
+                  :class="{ 'is-invalid': errors.has('companyName') }"
+                />
+                <div v-if="errors.has('companyName')" class="invalid-feedback">
+                  {{ errors.first("companyName") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="input9" class="col-sm-4 col-form-label"
+                >ที่อยู่ <span style="color: red">*</span> :</label
+              >
+              <div class="col-sm-8">
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="input9"
+                  placeholder="ที่อยู่"
+                  name="address"
+                  v-model="address"
+                  v-validate="'required'"
+                  :class="{ 'is-invalid': errors.has('address') }"
+                />
+                <div v-if="errors.has('address')" class="invalid-feedback">
+                  {{ errors.first("address") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail4" class="col-sm-4 col-form-label">
+                เบอร์โทรศัพท์ 1
+                <span style="color: red">*</span> :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail4"
+                  name="phoneNumber1"
+                  placeholder="เบอร์โทรศัพท์ 1"
+                  v-model="phoneNumber1"
+                  v-validate="'required|max:10|numeric'"
+                  :class="{ 'is-invalid': errors.has('phoneNumber1') }"
+                />
+                <div v-if="errors.has('phoneNumber1')" class="invalid-feedback">
+                  {{ errors.first("phoneNumber1") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail5" class="col-sm-4 col-form-label">
+                เบอร์โทรศัพท์ 2 :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail5"
+                  name="phoneNumber2"
+                  placeholder="เบอร์โทรศัพท์ 2"
+                  v-model="phoneNumber2"
+                  v-validate="'max:10|numeric'"
+                  :class="{ 'is-invalid': errors.has('phoneNumber2') }"
+                />
+                <div v-if="errors.has('phoneNumber2')" class="invalid-feedback">
+                  {{ errors.first("phoneNumber2") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail6" class="col-sm-4 col-form-label">
+                เบอร์โทรศัพท์ 3 :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail6"
+                  name="phoneNumber3"
+                  placeholder="เบอร์โทรศัพท์ 3"
+                  v-model="phoneNumber3"
+                  v-validate="'max:10|numeric'"
+                  :class="{ 'is-invalid': errors.has('phoneNumber3') }"
+                />
+                <div v-if="errors.has('phoneNumber3')" class="invalid-feedback">
+                  {{ errors.first("phoneNumber3") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail8" class="col-sm-4 col-form-label">
+                LINE ID :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail8"
+                  name="lineId"
+                  placeholder="LINE ID"
+                  v-model="lineId"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail9" class="col-sm-4 col-form-label">
+                Email <span style="color: red">*</span> :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="inputEmail9"
+                  name="email"
+                  placeholder="Email"
+                  v-model="email"
+                  v-validate="'required|email'"
+                  :class="{ 'is-invalid': errors.has('email') }"
+                />
+                <div v-if="errors.has('email')" class="invalid-feedback">
+                  {{ errors.first("email") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail7" class="col-sm-4 col-form-label">
+                เลขประจำตัวผู้เสียภาษีอากร <span style="color: red">*</span> :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail7"
+                  name="taxId"
+                  placeholder="เลขประจำตัวผู้เสียภาษีอากร"
+                  v-model="taxId"
+                  v-validate="'required|numeric'"
+                  :class="{ 'is-invalid': errors.has('taxId') }"
+                />
+                <div v-if="errors.has('taxId')" class="invalid-feedback">
+                  {{ errors.first("taxId") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail10" class="col-sm-4 col-form-label">
+                เว็บไซต์ :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail10"
+                  name="website"
+                  placeholder="เว็บไซต์"
+                  v-model="website"
                 />
               </div>
             </div>
@@ -64,6 +220,7 @@
 import { updateCompanyProfile } from "../api";
 import { get } from "lodash";
 import Swal from "sweetalert2";
+import { Validator } from "vee-validate";
 
 export default {
   name: "EditCompanyProfileModal",
@@ -112,9 +269,7 @@ export default {
             website: this.website,
             taxId: this.taxId,
           };
-          const response = await updateCompanyProfile(
-            payload,
-          );
+          const response = await updateCompanyProfile(payload);
           this.callbackCreate(response.data);
           this.$refs.closeModalBtn.click();
         }
@@ -129,7 +284,6 @@ export default {
       this.loading = false;
     },
     setupData() {
-      console.log(this.companyProfileData)
       this.companyName = get(this.companyProfileData, "companyName", "");
       this.address = get(this.companyProfileData, "address", "");
       this.phoneNumber1 = get(this.companyProfileData, "phoneNumber1", "");
@@ -142,6 +296,40 @@ export default {
     },
   },
   mounted() {
+    const dict = {
+      custom: {
+        companyName: {
+          required: "กรุณากรอกข้อมูล ชื่อบริษัท",
+        },
+        address: {
+          required: "กรุณากรอกข้อมูล ที่อยู่",
+        },
+        phoneNumber1: {
+          required: "กรุณากรอกข้อมูล เบอร์โทรศัพท์ 1",
+          max: "กรุณากรอกข้อมูลไม่เกิน 10 ตัวอักษร",
+          numeric: "กรุณากรอกข้อมูลตัวเลขเท่านั้น",
+        },
+        phoneNumber2: {
+          max: "กรุณากรอกข้อมูลไม่เกิน 10 ตัวอักษร",
+          numeric: "กรุณากรอกข้อมูลตัวเลขเท่านั้น",
+        },
+        phoneNumber3: {
+          max: "กรุณากรอกข้อมูลไม่เกิน 10 ตัวอักษร",
+          numeric: "กรุณากรอกข้อมูลตัวเลขเท่านั้น",
+        },
+        email: {
+          required: "กรุณากรอกข้อมูล อีเมล",
+          email: "กรุณากรอกข้อมูลอีเมลให้ถูกต้อง",
+        },
+        taxId: {
+          required: "กรุณากรอกข้อมูล เลขประจำตัวผู้เสียภาษีอากร",
+          numeric: "กรุณากรอกข้อมูลตัวเลขเท่านั้น",
+        },
+      },
+    };
+
+    Validator.localize("th");
+    Validator.localize("th", dict);
     this.setupData();
   },
 };
