@@ -12,9 +12,9 @@
         placeholder="Username"
         v-validate="'required'"
         autofocus
-        :class="{'is-invalid': errors.has('username')}"
+        :class="{ 'is-invalid': errors.has('username') }"
       />
-      <div class="invalid-feedback">{{ errors.first('username') }}</div>
+      <div class="invalid-feedback">{{ errors.first("username") }}</div>
       <label class="sr-only">Password</label>
       <input
         type="password"
@@ -23,20 +23,26 @@
         v-model="password"
         placeholder="Password"
         v-validate="'required'"
-        :class="{'is-invalid': errors.has('password')}"
+        :class="{ 'is-invalid': errors.has('password') }"
       />
-      <div class="invalid-feedback">{{ errors.first('password') }}</div>
+      <div class="invalid-feedback">{{ errors.first("password") }}</div>
       <button
         v-if="!loading"
         class="btn btn-lg btn-primary btn-block btn-submit"
         type="submit"
-      >เข้าสู่ระบบ</button>
+      >
+        เข้าสู่ระบบ
+      </button>
       <button
         v-else
         class="btn btn-lg btn-primary btn-block btn-submit disabled"
         type="button"
-      >รอสักครู่...</button>
-      <div v-if="isError" class="invalid-error">Username or password incorrect!</div>
+      >
+        รอสักครู่...
+      </button>
+      <div v-if="isError" class="invalid-error">
+        ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง!
+      </div>
     </form>
   </div>
 </template>
@@ -51,7 +57,7 @@ export default {
       username: "",
       password: "",
       loading: false,
-      isError: false
+      isError: false,
     };
   },
   methods: {
@@ -63,14 +69,12 @@ export default {
           this.isError = false;
           const payload = {
             username: this.username,
-            password: this.password
+            password: this.password,
           };
           try {
             const response = await login(payload);
             store.session.set("accessToken", response.data.token);
-
             this.$store.commit("updateToken", response.data.token);
-            this.$router.push({ name: "home" });
           } catch (error) {
             console.log(error);
             this.isError = true;
@@ -81,7 +85,7 @@ export default {
             const response = await getUserProfile();
             store.session.set("userProfile", response.data);
             this.$store.commit("updateProfile", response.data);
-            this.$router.push({ name: "home" });
+            this.$router.push({ name: "purchase-list" });
           } catch (error) {
             console.log(error);
             this.isError = true;
@@ -91,8 +95,8 @@ export default {
           this.loading = false;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="modal fade add-user-modal"
+      class="modal fade edit-user-modal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="myLargeModalLabel"
@@ -21,60 +21,9 @@
                   class="form-control"
                   id="inputEmail2"
                   placeholder="ชื่อผู้ใช้งาน"
-                  name="username"
                   v-model="username"
-                  v-validate="'required'"
-                  :class="{ 'is-invalid': errors.has('username') }"
+                  readonly
                 />
-                <div v-if="errors.has('username')" class="invalid-feedback">
-                  {{ errors.first("username") }}
-                </div>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputEmail65" class="col-sm-4 col-form-label">
-                รหัสผ่าน
-                <span style="color: red">*</span> :
-              </label>
-              <div class="col-sm-8">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="inputEmail65"
-                  placeholder="รหัสผ่าน"
-                  name="password"
-                  ref="password"
-                  v-model="password"
-                  v-validate="'required|min:8'"
-                  :class="{ 'is-invalid': errors.has('password') }"
-                />
-                <div v-if="errors.has('password')" class="invalid-feedback">
-                  {{ errors.first("password") }}
-                </div>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputEmail6" class="col-sm-4 col-form-label">
-                ยืนยันรหัสผ่าน
-                <span style="color: red">*</span> :
-              </label>
-              <div class="col-sm-8">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="inputEmail6"
-                  placeholder="ยืนยันรหัสผ่าน"
-                  name="confirmPassword"
-                  v-model="confirmPassword"
-                  v-validate="'required|confirmed:password'"
-                  :class="{ 'is-invalid': errors.has('confirmPassword') }"
-                />
-                <div
-                  v-if="errors.has('confirmPassword')"
-                  class="invalid-feedback"
-                >
-                  {{ errors.first("confirmPassword") }}
-                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -139,7 +88,73 @@
                 </div>
               </div>
             </div>
+            <div class="form-group row">
+              <label for="inputEmail0" class="col-sm-4 col-form-label"> </label>
+              <div class="col-sm-8">
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    v-model="isEditPassword"
+                    class="form-check-input"
+                    id="exampleCheck1"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="exampleCheck1"
+                    style="cursor:pointer"
+                    >ตั้งรหัสผ่านใหม่</label
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="form-group row" v-if="isEditPassword">
+              <label for="inputEmail65" class="col-sm-4 col-form-label">
+                รหัสผ่าน
+                <span style="color: red">*</span> :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="inputEmail65"
+                  placeholder="รหัสผ่าน"
+                  name="password"
+                  ref="password"
+                  v-model="password"
+                  v-validate="'required|min:8'"
+                  :class="{ 'is-invalid': errors.has('password') }"
+                />
+                <div v-if="errors.has('password')" class="invalid-feedback">
+                  {{ errors.first("password") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row" v-if="isEditPassword">
+              <label for="inputEmail6" class="col-sm-4 col-form-label">
+                ยืนยันรหัสผ่าน
+                <span style="color: red">*</span> :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="inputEmail6"
+                  placeholder="ยืนยันรหัสผ่าน"
+                  name="confirmPassword"
+                  v-model="confirmPassword"
+                  v-validate="'required|confirmed:password'"
+                  :class="{ 'is-invalid': errors.has('confirmPassword') }"
+                />
+                <div
+                  v-if="errors.has('confirmPassword')"
+                  class="invalid-feedback"
+                >
+                  {{ errors.first("confirmPassword") }}
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="modal-footer" v-if="!loading">
             <button
               type="button"
@@ -175,14 +190,18 @@
   </div>
 </template>
 <script>
-import { postUser } from "../api";
+import { updateUser } from "../api";
 import Swal from "sweetalert2";
 import { get } from "lodash";
 import { Validator } from "vee-validate";
 
 export default {
-  name: "AddUserModal",
+  name: "EditUserModal",
   props: {
+    userData: {
+      type: Object,
+      default: null,
+    },
     callbackCreate: {
       type: Function,
       default: () => {},
@@ -202,6 +221,7 @@ export default {
       role: "admin",
       loading: false,
       roles: ["admin", "manager", "staff", "seller"],
+      isEditPassword: false,
     };
   },
   methods: {
@@ -210,15 +230,19 @@ export default {
         const validateResult = await this.$validator.validate();
         if (validateResult) {
           this.loading = true;
-          const payload = {
-            username: this.username,
-            password: this.password,
-            confirmPassword: this.confirmPassword,
+          let payload = {
             firstName: this.firstName,
             lastName: this.lastName,
             role: this.role,
           };
-          const response = await postUser(payload);
+          if (this.isEditPassword) {
+            payload = {
+              ...payload,
+              password: this.password,
+              confirmPassword: this.confirmPassword,
+            };
+          }
+          const response = await updateUser(payload, this.userData.id);
           this.callbackCreate(response.data);
           this.$refs.closeModalBtn.click();
         }
@@ -226,11 +250,17 @@ export default {
         if (get(error, "response.status") == 406) {
           Swal.fire("ผิดพลาด!", get(error, "response.data"), "error");
         } else {
-          Swal.fire("ผิดพลาด!", "ไม่สามารถเพิ่มข้อมูลได้", "error");
+          Swal.fire("ผิดพลาด!", "ไม่สามารถแก้ไขข้อมูลได้", "error");
         }
         this.loading = false;
       }
       this.loading = false;
+    },
+    setupData() {
+      this.username = get(this.userData, "username", "");
+      this.firstName = get(this.userData, "firstName", "");
+      this.lastName = get(this.userData, "lastName", "");
+      this.role = get(this.userData, "role", "");
     },
   },
   mounted() {
@@ -261,6 +291,7 @@ export default {
 
     Validator.localize("th");
     Validator.localize("th", dict);
+    this.setupData();
   },
 };
 </script>
