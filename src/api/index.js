@@ -209,3 +209,13 @@ export const getCompanyProfile = () => {
   let url = `${env.api_endpoint}/api/companyProfile`;
   return axios.get(url, config);
 };
+
+export const updateCompanyProfile = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/companyProfile`;
+  return axios.put(url, payload, config);
+};

@@ -3,72 +3,73 @@
     <div class="row">
       <div class="col-3">
         <button
-          class="btn btn-primary btn-sm"
-          @click="confirmDeleteProduct(product)"
+          class="btn btn-sm"
+          data-toggle="modal"
+          data-target=".edit-company-profile-modal"
+          data-backdrop="static"
+          data-keyboard="false"
+          @click="editCompanyProfile(companyProfile)"
         >
           แก้ไข
         </button>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">ชื่อบริษัท</div>
-      <div class="col-6">{{ companyProfile.companyName }}</div>
+    <div v-if="companyProfile">
+      <div class="row">
+        <div class="col-3">ชื่อบริษัท</div>
+        <div class="col-6">{{ companyProfile.companyName }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">ที่อยู่</div>
+        <div class="col-9">{{ companyProfile.address }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">เบอร์โทรศัพท์ 1</div>
+        <div class="col-9">{{ companyProfile.phoneNumber1 }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">เบอร์โทรศัพท์ 2</div>
+        <div class="col-9">{{ companyProfile.phoneNumber2 }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">Line ID</div>
+        <div class="col-9">{{ companyProfile.lineId }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">Email</div>
+        <div class="col-9">{{ companyProfile.email }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">เลขประจำตัวผู้เสียภาษีอากร</div>
+        <div class="col-9">{{ companyProfile.taxId }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">เว็บไซต์</div>
+        <div class="col-9">{{ companyProfile.website }}</div>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-3">ที่อยู่</div>
-      <div class="col-9">{{ companyProfile.address }}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">เบอร์โทรศัพท์ 1</div>
-      <div class="col-9">{{ companyProfile.phoneNumber1 }}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">เบอร์โทรศัพท์ 2</div>
-      <div class="col-9">{{ companyProfile.phoneNumber2 }}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">Line ID</div>
-      <div class="col-9">{{ companyProfile.lineId }}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">Email</div>
-      <div class="col-9">{{ companyProfile.email }}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">เลขประจำตัวผู้เสียภาษีอากร</div>
-      <div class="col-9">{{ companyProfile.taxId }}</div>
-    </div>
-    <div class="row">
-      <div class="col-3">เว็บไซต์</div>
-      <div class="col-9">{{ companyProfile.website }}</div>
-    </div>
-    <AddProductModal
-      v-if="openModalCreate"
-      :callback-create="callbackCreate"
-      :on-close-modal="closeModal"
-    />
-    <EditProductModal
+    <EditCompanyProfileModal
       v-if="openModalEdit"
       :callback-create="callbackEdit"
-      :product-data="product"
+      :company-profile-data="companyProfile"
       :on-close-modal="closeModal"
     />
   </div>
 </template>
 <script>
 import { getCompanyProfile } from "../api";
-import AddProductModal from "../components/AddProductModal";
-import EditProductModal from "../components/EditProductModal";
+import EditCompanyProfileModal from "../components/EditCompanyProfileModal";
+import Swal from "sweetalert2";
 
 export default {
-  name: "UserList",
+  name: "CompanyProfile",
   components: {
-    AddProductModal,
-    EditProductModal,
+    EditCompanyProfileModal,
   },
   data() {
     return {
       companyProfile: null,
+      openModalEdit: false,
     };
   },
   methods: {
@@ -79,6 +80,21 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    editCompanyProfile(data) {
+      console.log(data)
+      this.openModalEdit = true;
+      this.companyProfile = data;
+    },
+    callbackEdit() {
+      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
+      this.closeModal();
+      this.doGetCompanyProfile();
+    },
+    closeModal() {
+      setTimeout(() => {
+        this.openModalEdit = false;
+      }, 500);
     },
   },
   mounted() {
