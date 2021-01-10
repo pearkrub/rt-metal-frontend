@@ -9,6 +9,19 @@
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">เพิ่มข้อมูลสินค้า</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              ref="closeModalBtn"
+              @click="onCloseModal"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           <div class="bd-example">
             <div class="form-group row">
               <label for="inputEmail3" class="col-sm-4 col-form-label">
