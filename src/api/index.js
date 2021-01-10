@@ -197,7 +197,7 @@ export const updateUser = (payload, id) => {
     },
   };
   let url = `${env.api_endpoint}/api/user/${id}`;
-  return axios.put(url, payload, config);
+  return axios.patch(url, payload, config);
 };
 
 export const getCompanyProfile = () => {

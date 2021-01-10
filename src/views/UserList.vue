@@ -47,19 +47,19 @@
             <button
               class="btn btn-sm"
               data-toggle="modal"
-              data-target=".edit-product-modal"
+              data-target=".edit-user-modal"
               data-backdrop="static"
               data-keyboard="false"
-              @click="editProduct(product)"
+              @click="editUser(user)"
             >
               แก้ไข</button
             >&nbsp;
-            <button
+            <!-- <button
               class="btn btn-danger btn-sm"
               @click="confirmDeleteProduct(product)"
             >
               ลบ
-            </button>
+            </button> -->
           </td>
         </tr>
       </tbody>
@@ -69,10 +69,10 @@
       :callback-create="callbackCreate"
       :on-close-modal="closeModal"
     />
-    <EditProductModal
+    <EditUserModal
       v-if="openModalEdit"
       :callback-create="callbackEdit"
-      :product-data="product"
+      :user-data="user"
       :on-close-modal="closeModal"
     />
   </div>
@@ -80,7 +80,7 @@
 <script>
 import { getUser } from "../api";
 import AddUserModal from "../components/AddUserModal";
-import EditProductModal from "../components/EditProductModal";
+import EditUserModal from "../components/EditUserModal";
 import Swal from "sweetalert2";
 import { get } from "lodash";
 
@@ -88,7 +88,7 @@ export default {
   name: "UserList",
   components: {
     AddUserModal,
-    EditProductModal,
+    EditUserModal,
   },
   data() {
     return {
@@ -102,7 +102,7 @@ export default {
   methods: {
     async doGetData() {
       try {
-        const response = await getUser({ username: this.search });
+        const response = await getUser({ search: this.search });
         this.users = response.data;
       } catch (error) {
         console.log(error);
@@ -118,9 +118,9 @@ export default {
       this.closeModal();
       this.doGetData();
     },
-    editProduct(data) {
+    editUser(data) {
       this.openModalEdit = true;
-      this.product = data;
+      this.user = data;
     },
     closeModal() {
       setTimeout(() => {
