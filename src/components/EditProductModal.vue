@@ -20,9 +20,9 @@
                   type="text"
                   class="form-control"
                   id="inputEmail2"
+                  name="productCode"
                   placeholder="รหัสสินค้า"
-                  :value="productId"
-                  readonly
+                  v-model="productCode"
                 />
               </div>
             </div>
@@ -101,6 +101,8 @@
 <script>
 import { updateProduct } from "../api";
 import { get } from "lodash";
+import Swal from "sweetalert2";
+
 export default {
   name: "EditProductModal",
   props: {
@@ -127,16 +129,17 @@ export default {
       productName: "",
       remark: "",
       loading: false,
+      productCode: "",
     };
   },
   methods: {
     async submit() {
-      console.log(this.$refs);
       try {
         const validateResult = await this.$validator.validate();
         if (validateResult) {
           this.loading = true;
           const payload = {
+            productCode: this.productCode,
             productName: this.productName,
             remark: this.remark,
           };
@@ -148,13 +151,18 @@ export default {
           this.$refs.closeModalBtn.click();
         }
       } catch (error) {
+        if (get(error, "response.status") == 406) {
+          Swal.fire("ผิดพลาด!", get(error, "response.data"), "error");
+        } else {
+          Swal.fire("ผิดพลาด!", "ไม่สามารถแก้ไขข้อมูลได้", "error");
+        }
         this.loading = false;
       }
       this.loading = false;
     },
     setupData() {
-      console.log(this.productData);
       this.productName = get(this.productData, "productName", "");
+      this.productCode = get(this.productData, "productCode", "");
       this.remark = get(this.productData, "remark", "");
     },
   },

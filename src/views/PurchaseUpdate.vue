@@ -1,4 +1,4 @@
-<template >
+<template>
   <div>
     <div class="header-purchase">สร้างรายการซื้อ</div>
     <purchase-header
@@ -32,8 +32,8 @@
           class="btn btn-report"
           :disabled="
             purchaseStatus != 'APPROVED' &&
-            purchaseStatus != 'SUCCESS' &&
-            purchaseStatus != 'SUCCESS_BY_CREDIT'
+              purchaseStatus != 'SUCCESS' &&
+              purchaseStatus != 'SUCCESS_BY_CREDIT'
           "
           @click="printPurchase('ORDER')"
         >
@@ -292,7 +292,6 @@ export default {
       this.loading = true;
       try {
         const response = await getPurchaseById(this.$route.params.purchaseId);
-        console.log(response.data);
         this.purchase = response.data.purchase;
         this.products = response.data.purchaseItems;
         this.purchaseTransStatus = response.data.purchaseTransStatus;
@@ -361,7 +360,7 @@ export default {
             paymentMethod: paymentMethod,
           };
           await updatePurchaseInventory(payload);
-          // window.location.reload();
+          window.location.reload();
         } catch (error) {
           console.log(error);
         }

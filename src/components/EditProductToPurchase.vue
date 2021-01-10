@@ -61,7 +61,7 @@
               </label>
               <div class="col-sm-5">
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   id="inputExport"
                   placeholder="0.00"
@@ -105,7 +105,7 @@
               </label>
               <div class="col-sm-5">
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   id="inputImport"
                   placeholder="0.00"
@@ -147,7 +147,7 @@
               </label>
               <div class="col-sm-5">
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   id="inputBuy"
                   placeholder="0.00"
@@ -389,7 +389,6 @@ export default {
         const masterData = await getMasterData();
         this.masterData = masterData.data;
       } catch (error) {
-        console.log("get product error.", error.response);
         this.masterData = [];
       }
     },
@@ -459,7 +458,6 @@ export default {
 
     // this.getProduct();
     this.getMasterData();
-    console.log(this.productSelected);
     this.setupData();
   },
 };

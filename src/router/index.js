@@ -71,6 +71,22 @@ const routes = [
       middleware: [isAuth],
     },
   },
+  {
+    path: "/user",
+    name: "user",
+    component: views.UserList,
+    meta: {
+      middleware: [isAuth],
+    },
+  },
+  {
+    path: "/company-profile",
+    name: "company-profile",
+    component: views.UserList,
+    meta: {
+      middleware: [isAuth],
+    },
+  },
 ];
 
 const router = new VueRouter({

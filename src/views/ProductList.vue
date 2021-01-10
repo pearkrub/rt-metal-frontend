@@ -20,7 +20,9 @@
               @click="openModalCreate = true"
               data-backdrop="static"
               data-keyboard="false"
-            >+ เพิ่ม</button>
+            >
+              + เพิ่ม
+            </button>
           </th>
         </tr>
       </thead>
@@ -28,7 +30,7 @@
         <tr v-for="(product, index) in products" :key="index">
           <td class="text-center">{{ index + 1 }}</td>
           <td>
-            <div class="data-list text-center">P000{{ product.id }}</div>
+            <div class="data-list text-center">{{ product.productCode }}</div>
           </td>
           <td>
             <div class="data-list">{{ product.productName }}</div>
@@ -41,8 +43,15 @@
               data-backdrop="static"
               data-keyboard="false"
               @click="editProduct(product)"
-            >แก้ไข</button>&nbsp;
-            <button class="btn btn-danger btn-sm" @click="confirmDeleteProduct(product)">ลบ</button>
+            >
+              แก้ไข</button
+            >&nbsp;
+            <button
+              class="btn btn-danger btn-sm"
+              @click="confirmDeleteProduct(product)"
+            >
+              ลบ
+            </button>
           </td>
         </tr>
       </tbody>
@@ -85,7 +94,6 @@ export default {
     async doGetProduct() {
       try {
         const response = await getProduct({ productName: this.search });
-        console.log(response.data);
         this.products = response.data;
       } catch (error) {
         console.log(error);
@@ -96,8 +104,7 @@ export default {
       this.products = [...this.products, product];
       this.closeModal();
     },
-    callbackEdit(product) {
-      console.log(product);
+    callbackEdit() {
       Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
       this.closeModal();
       this.doGetProduct();
@@ -113,7 +120,6 @@ export default {
       }, 500);
     },
     confirmDeleteProduct(product) {
-      console.log(product);
       Swal.fire({
         title: `ยืนยัน`,
         text: `ลบ ${product.productName}`,

@@ -5,6 +5,8 @@ import ProductList from "./ProductList";
 import PurchaseList from "./PurchaseList";
 import CreatePurchase from "./CreatePurchase";
 import PurchaseUpdate from "./PurchaseUpdate";
+import UserList from './UserList'
+import CompanyProfile from './CompanyProfile'
 
 export default {
   LoginPage,
@@ -14,4 +16,6 @@ export default {
   PurchaseList,
   CreatePurchase,
   PurchaseUpdate,
+  UserList,
+  CompanyProfile
 };

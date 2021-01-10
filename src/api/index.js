@@ -13,7 +13,7 @@ export const getUserProfile = () => {
       Authorization: "Bearer " + store.session.get("accessToken"),
     },
   };
-  let url = `${env.api_endpoint}/api/user`;
+  let url = `${env.api_endpoint}/api/me`;
   return axios.get(url, config);
 };
 
@@ -167,4 +167,35 @@ export const getMasterData = () => {
   };
   let url = `${env.api_endpoint}/api/master`;
   return axios.get(url, config);
+};
+
+export const getUser = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+    params: payload,
+  };
+  let url = `${env.api_endpoint}/api/user`;
+  return axios.get(url, config);
+};
+
+export const postUser = (payload) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/user`;
+  return axios.post(url, payload, config);
+};
+
+export const updateUser = (payload, id) => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/user/${id}`;
+  return axios.put(url, payload, config);
 };

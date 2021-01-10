@@ -12,6 +12,27 @@
           <div class="bd-example">
             <div class="form-group row">
               <label for="inputEmail3" class="col-sm-4 col-form-label">
+                รหัส
+                <span style="color: red">*</span> :
+              </label>
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputEmail2"
+                  placeholder="รหัสสินค้า"
+                  name="productCode"
+                  v-model="productCode"
+                  v-validate="'required'"
+                  :class="{ 'is-invalid': errors.has('productCode') }"
+                />
+                <div v-if="errors.has('productCode')" class="invalid-feedback">
+                  กรุณากรอกข้อมูล รหัสสินค้า
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-4 col-form-label">
                 ชื่อ
                 <span style="color: red">*</span> :
               </label>
@@ -83,7 +104,9 @@
 </template>
 <script>
 import { postProduct } from "../api";
-// import { get } from "lodash";
+import Swal from "sweetalert2";
+import { get } from "lodash";
+
 export default {
   name: "AddProductModal",
   props: {
@@ -99,19 +122,20 @@ export default {
   data() {
     return {
       productName: "",
+      productCode: "",
       remark: "",
       loading: false,
     };
   },
   methods: {
     async submit() {
-      console.log(this.$refs);
       try {
         const validateResult = await this.$validator.validate();
         if (validateResult) {
           this.loading = true;
           const payload = {
             productName: this.productName,
+            productCode: this.productCode,
             remark: this.remark,
           };
           const response = await postProduct(payload);
@@ -119,6 +143,11 @@ export default {
           this.$refs.closeModalBtn.click();
         }
       } catch (error) {
+        if (get(error, "response.status") == 406) {
+          Swal.fire("ผิดพลาด!", get(error, "response.data"), "error");
+        } else {
+          Swal.fire("ผิดพลาด!", "ไม่สามารถแก้ไขข้อมูลได้", "error");
+        }
         this.loading = false;
       }
       this.loading = false;

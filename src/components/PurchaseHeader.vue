@@ -91,7 +91,7 @@
               <div class="label-purchase">
                 ที่อยู่ 1:
                 <label class="item-purchase">{{
-                  getData(distributor, "distributorAddress1")
+                  getData(distributor, "distributorAddress1", "-")
                 }}</label>
               </div>
               <div class="label-purchase">
@@ -103,7 +103,7 @@
               <div class="label-purchase">
                 รหัสไปรษณีย์:
                 <label class="item-purchase">{{
-                  getData(distributor, "distributorPostcode")
+                  getData(distributor, "distributorPostcode", "-")
                 }}</label>
               </div>
             </div>
@@ -111,7 +111,7 @@
               <div class="label-purchase">
                 ผู้ติดต่อ:
                 <label class="item-purchase">{{
-                  getData(distributor, "distributorContactName")
+                  getData(distributor, "distributorContactName", "-")
                 }}</label>
               </div>
               <div class="label-purchase">
@@ -216,7 +216,6 @@ export default {
       try {
         const response = await getDistribute();
         this.distributors = get(response, "data");
-        console.log(this.distributorData);
         if (this.distributorData) {
           let distributor = this.distributorData;
           this.distributorId = get(distributor, "id");
@@ -224,8 +223,7 @@ export default {
           let distributor = head(this.distributors);
           this.distributorId = get(distributor, "id");
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
         this.distributors = [];
       }
     },
@@ -277,5 +275,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

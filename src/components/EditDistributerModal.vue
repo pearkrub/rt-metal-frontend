@@ -54,8 +54,7 @@
             </div>
             <div class="form-group row">
               <label for="input4" class="col-sm-4 col-form-label">
-                ที่อยู่ 1
-                <span style="color: red">*</span> :
+                ที่อยู่ 1 :
               </label>
               <div class="col-sm-8">
                 <input
@@ -65,12 +64,7 @@
                   placeholder="บ้านเลขที่ ซอย ถนน แขวง"
                   name="distributorAddress1"
                   v-model="distributorAddress1"
-                  v-validate="'required'"
-                  :class="{ 'is-invalid': errors.has('distributorAddress1') }"
                 />
-                <div class="invalid-feedback">
-                  {{ errors.first("distributorAddress1") }}
-                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -90,8 +84,7 @@
             </div>
             <div class="form-group row">
               <label for="input6" class="col-sm-4 col-form-label">
-                รหัสไปรษณีย์
-                <span style="color: red">*</span> :
+                รหัสไปรษณีย์ :
               </label>
               <div class="col-sm-8">
                 <input
@@ -101,18 +94,12 @@
                   placeholder="รหัสไปรษณีย์"
                   name="distributorPostcode"
                   v-model="distributorPostcode"
-                  v-validate="'required'"
-                  :class="{ 'is-invalid': errors.has('distributorPostcode') }"
                 />
-                <div class="invalid-feedback">
-                  {{ errors.first("distributorPostcode") }}
-                </div>
               </div>
             </div>
             <div class="form-group row">
               <label for="input7" class="col-sm-4 col-form-label">
-                ผู้ติดต่อ
-                <span style="color: red">*</span> :
+                ผู้ติดต่อ :
               </label>
               <div class="col-sm-8">
                 <input
@@ -122,14 +109,7 @@
                   placeholder="ชื่อผู้ติดต่อ"
                   name="distributorContactName"
                   v-model="distributorContactName"
-                  v-validate="'required'"
-                  :class="{
-                    'is-invalid': errors.has('distributorContactName'),
-                  }"
                 />
-                <div class="invalid-feedback">
-                  {{ errors.first("distributorContactName") }}
-                </div>
               </div>
             </div>
             <div class="form-group row">
@@ -145,7 +125,7 @@
                   placeholder
                   name="distributorTelNo"
                   v-model="distributorTelNo"
-                  v-validate="'required'"
+                  v-validate="'required|max:10|numeric'"
                   :class="{ 'is-invalid': errors.has('distributorTelNo') }"
                 />
                 <div class="invalid-feedback">
@@ -237,7 +217,6 @@ export default {
   },
   methods: {
     async submit() {
-      console.log(this.$refs);
       try {
         const validateResult = await this.$validator.validate();
         if (validateResult) {
@@ -265,7 +244,6 @@ export default {
       this.loading = false;
     },
     setupData() {
-      console.log(this.distributorData);
       this.distributorName = get(this.distributorData, "distributorName", "");
       this.distributorTaxId = get(this.distributorData, "distributorTaxId", "");
       this.distributorAddress1 = get(
@@ -312,6 +290,8 @@ export default {
         },
         distributorTelNo: {
           required: "กรุณากรอกข้อมูล เบอรโทรศัพท์",
+          numeric: "กรุณากรอกข้อมูลตัวเลขเท่านั้น",
+          max: "กรุณากรอกข้อมูลไม่เกิน 10 ตัวอักษร",
         },
       },
     };

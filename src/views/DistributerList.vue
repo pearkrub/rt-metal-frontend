@@ -20,7 +20,9 @@
               @click="openModalCreate = true"
               data-backdrop="static"
               data-keyboard="false"
-            >+ เพิ่ม</button>
+            >
+              + เพิ่ม
+            </button>
           </th>
         </tr>
       </thead>
@@ -41,8 +43,10 @@
               data-backdrop="static"
               data-keyboard="false"
               @click="editDistributor(distributer)"
-            >แก้ไข</button>&nbsp;
-            <button class="btn btn-danger btn-sm" @click="deleteDistributor(distributer)">ลบ</button>
+            >
+              แก้ไข</button
+            >&nbsp;
+            <!-- <button class="btn btn-danger btn-sm" @click="deleteDistributor(distributer)">ลบ</button> -->
           </td>
         </tr>
       </tbody>
@@ -85,7 +89,6 @@ export default {
     async getDistributer() {
       try {
         const response = await getDistribute({ search: this.search });
-        console.log(response.data);
         this.distributers = response.data;
       } catch (error) {
         console.log(error);
@@ -96,8 +99,7 @@ export default {
       this.closeModal();
       this.distributers = [...this.distributers, distributer];
     },
-    callbackEdit(distributer) {
-      console.log(distributer);
+    callbackEdit() {
       Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
       this.closeModal();
       this.getDistributer();
@@ -113,7 +115,6 @@ export default {
       }, 500);
     },
     deleteDistributor(distributer) {
-      console.log(distributer);
       Swal.fire({
         title: `ยืนยัน`,
         text: `ลบ ${distributer.distributorName}`,

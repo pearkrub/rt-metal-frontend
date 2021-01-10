@@ -19,13 +19,6 @@
         <ul class="navbar-nav mr-auto">
           <li
             class="nav-item"
-            :class="{ active: page == 'home' }"
-            @click="linkTo('home')"
-          >
-            <a class="nav-link">Home</a>
-          </li>
-          <li
-            class="nav-item"
             :class="{ active: page == 'purchase-list' }"
             @click="linkTo('purchase-list')"
           >
@@ -51,6 +44,22 @@
             @click="linkTo('product-list')"
           >
             <a class="nav-link">รายการสินค้า</a>
+          </li>
+          <li
+            class="nav-item"
+            :class="{ active: page == 'user' }"
+            @click="linkTo('user')"
+            v-if="userRole == 'admin'"
+          >
+            <a class="nav-link">ผู้ใช้งานระบบ</a>
+          </li>
+          <li
+            class="nav-item"
+            :class="{ active: page == 'company-profile' }"
+            @click="linkTo('company-profile')"
+            v-if="userRole == 'admin'"
+          >
+            <a class="nav-link">ข้อมูลบริษัท</a>
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -83,6 +92,9 @@ export default {
     ...mapState(["userProfile"]),
     userName() {
       return get(this.userProfile, "username", "");
+    },
+    userRole() {
+      return get(this.userProfile, "role", "");
     },
   },
   methods: {

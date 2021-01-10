@@ -1,4 +1,4 @@
-<template >
+<template>
   <div>
     <div class="header-purchase">สร้างรายการซื้อ</div>
     <purchase-header :sync-data="syncData"></purchase-header>
@@ -214,7 +214,6 @@ export default {
                 purchaseItems: this.productPayload(),
               };
               const purChase = await createPurchase(payload);
-              console.log(purChase.data);
               Swal.fire({
                 title: "สร้างรายการซื้อสำเร็จ",
                 showDenyButton: true,
@@ -232,7 +231,6 @@ export default {
                   this.redirectToHome();
                 }
               });
-              console.log(payload);
             } catch (error) {
               console.log(error);
             }
