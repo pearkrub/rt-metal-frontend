@@ -82,7 +82,7 @@ const routes = [
   {
     path: "/company-profile",
     name: "company-profile",
-    component: views.UserList,
+    component: views.CompanyProfile,
     meta: {
       middleware: [isAuth],
     },

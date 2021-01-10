@@ -1,61 +1,47 @@
 <template>
   <div>
-    <form @submit.prevent="submitForm">
-      <div class="search-box">
-        <input type="text" v-model="search" class="input-search" />
-        <div class="btn-search" @click="doGetProduct">ค้นหา</div>
+    <div class="row">
+      <div class="col-3">
+        <button
+          class="btn btn-primary btn-sm"
+          @click="confirmDeleteProduct(product)"
+        >
+          แก้ไข
+        </button>
       </div>
-    </form>
-    <table class="table-bordered table-sm table-hover table">
-      <thead>
-        <tr>
-          <th>ลำดับที่</th>
-          <th>รหัสสินค้า</th>
-          <th>ชื่อสินค้า</th>
-          <th>
-            <button
-              class="btn btn-success btn-sm"
-              data-toggle="modal"
-              data-target=".add-product-modal"
-              @click="openModalCreate = true"
-              data-backdrop="static"
-              data-keyboard="false"
-            >
-              + เพิ่ม
-            </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(product, index) in products" :key="index">
-          <td class="text-center">{{ index + 1 }}</td>
-          <td>
-            <div class="data-list text-center">{{ product.productCode }}</div>
-          </td>
-          <td>
-            <div class="data-list">{{ product.productName }}</div>
-          </td>
-          <td class="text-center">
-            <button
-              class="btn btn-sm"
-              data-toggle="modal"
-              data-target=".edit-product-modal"
-              data-backdrop="static"
-              data-keyboard="false"
-              @click="editProduct(product)"
-            >
-              แก้ไข</button
-            >&nbsp;
-            <button
-              class="btn btn-danger btn-sm"
-              @click="confirmDeleteProduct(product)"
-            >
-              ลบ
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
+    <div class="row">
+      <div class="col-3">ชื่อบริษัท</div>
+      <div class="col-6">{{ companyProfile.companyName }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">ที่อยู่</div>
+      <div class="col-9">{{ companyProfile.address }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">เบอร์โทรศัพท์ 1</div>
+      <div class="col-9">{{ companyProfile.phoneNumber1 }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">เบอร์โทรศัพท์ 2</div>
+      <div class="col-9">{{ companyProfile.phoneNumber2 }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">Line ID</div>
+      <div class="col-9">{{ companyProfile.lineId }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">Email</div>
+      <div class="col-9">{{ companyProfile.email }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">เลขประจำตัวผู้เสียภาษีอากร</div>
+      <div class="col-9">{{ companyProfile.taxId }}</div>
+    </div>
+    <div class="row">
+      <div class="col-3">เว็บไซต์</div>
+      <div class="col-9">{{ companyProfile.website }}</div>
+    </div>
     <AddProductModal
       v-if="openModalCreate"
       :callback-create="callbackCreate"
@@ -70,10 +56,9 @@
   </div>
 </template>
 <script>
-import { getProduct, deleteProduct } from "../api";
+import { getCompanyProfile } from "../api";
 import AddProductModal from "../components/AddProductModal";
 import EditProductModal from "../components/EditProductModal";
-import Swal from "sweetalert2";
 
 export default {
   name: "UserList",
@@ -83,69 +68,21 @@ export default {
   },
   data() {
     return {
-      products: [],
-      product: null,
-      openModalCreate: false,
-      openModalEdit: false,
-      search: "",
+      companyProfile: null,
     };
   },
   methods: {
-    async doGetProduct() {
+    async doGetCompanyProfile() {
       try {
-        const response = await getProduct({ productName: this.search });
-        this.products = response.data;
+        const response = await getCompanyProfile();
+        this.companyProfile = response.data;
       } catch (error) {
         console.log(error);
       }
     },
-    callbackCreate(product) {
-      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
-      this.products = [...this.products, product];
-      this.closeModal();
-    },
-    callbackEdit() {
-      Swal.fire("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว", "success");
-      this.closeModal();
-      this.doGetProduct();
-    },
-    editProduct(data) {
-      this.openModalEdit = true;
-      this.product = data;
-    },
-    closeModal() {
-      setTimeout(() => {
-        this.openModalEdit = false;
-        this.openModalCreate = false;
-      }, 500);
-    },
-    confirmDeleteProduct(product) {
-      Swal.fire({
-        title: `ยืนยัน`,
-        text: `ลบ ${product.productName}`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#dc3545",
-        confirmButtonText: "ลบข้อมูล",
-        cancelButtonText: "ยกเลิก",
-      }).then(async (result) => {
-        if (result.value) {
-          try {
-            await deleteProduct(product.id);
-            Swal.fire("สำเร็จ!", "ลบข้อมูลเรียบร้อยแล้ว", "success");
-            this.doGetProduct();
-          } catch (error) {
-            Swal.fire("ผิดพลาด!", "ลบข้อมูลไม่สำเร็จ", "error");
-          }
-        }
-      });
-    },
-    submitForm() {
-      this.doGetProduct();
-    },
   },
   mounted() {
-    this.doGetProduct();
+    this.doGetCompanyProfile();
   },
 };
 </script>

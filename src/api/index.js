@@ -13,7 +13,7 @@ export const getUserProfile = () => {
       Authorization: "Bearer " + store.session.get("accessToken"),
     },
   };
-  let url = `${env.api_endpoint}/api/me`;
+  let url = `${env.api_endpoint}/api/user/me`;
   return axios.get(url, config);
 };
 
@@ -198,4 +198,14 @@ export const updateUser = (payload, id) => {
   };
   let url = `${env.api_endpoint}/api/user/${id}`;
   return axios.put(url, payload, config);
+};
+
+export const getCompanyProfile = () => {
+  const config = {
+    headers: {
+      Authorization: "Bearer " + store.session.get("accessToken"),
+    },
+  };
+  let url = `${env.api_endpoint}/api/companyProfile`;
+  return axios.get(url, config);
 };
