@@ -146,7 +146,7 @@ export default {
         if (get(error, "response.status") == 406) {
           Swal.fire("ผิดพลาด!", get(error, "response.data"), "error");
         } else {
-          Swal.fire("ผิดพลาด!", "ไม่สามารถแก้ไขข้อมูลได้", "error");
+          Swal.fire("ผิดพลาด!", "ไม่สามารถเพิ่มข้อมูลได้", "error");
         }
         this.loading = false;
       }
